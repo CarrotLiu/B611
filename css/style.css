@@ -5,3 +5,23 @@ html, body {
 canvas {
   display: block;
 }
+h1{
+  color: white;
+  text-align: center;
+}
+
+#textAreaContainer{
+  text-align: center;
+  /* width: 600;
+  height: 550px; */
+  margin-top: 10%;
+  padding: 20px;
+  /* border: 1px solid #cccccc66;
+  background-color: #f0f0f08a; */
+  /* border-radius: 20px; */
+
+}
+
+#textInputArea{
+  color:black;
+}
