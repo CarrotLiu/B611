@@ -8,6 +8,8 @@ class Seed {
     this.seedY = 0;
     this.lastCoreX = 0;
     this.lastCoreY = 0;
+    this.lastSeedX = 0;
+    this.lastSeedY = 0;
 
     this.layerNum = layer;
     this.seedPos = sdPos;
@@ -32,19 +34,20 @@ class Seed {
     this.ifSelf = true;
 
     this.isHovering = false;
+    this.ifClicked = false;
     this.isWriting = false;
     this.isReading = false;
     this.data = [];
+    this.removedWriteDiv = null;
+    this.removedReadDiv = null;
 
     this.ifFly = false;
     this.flyDone = false;
 
-    
-
     this.colorIndex = ci;
   }
 
-  update() {
+  update(stopHover) {
     //get mouse pos
     this.dmouse = dist(
       this.x + this.seedX + this.coreX,
@@ -59,8 +62,8 @@ class Seed {
       this.seedX += this.xSpd;
       this.seedY += this.ySpd;
     } else {
-      if (this.ifFriend) {
-        this.checkHover();
+      if (this.ifFriend || this.ifSelf) {
+        this.checkHover(stopHover);
       } else {
         this.checkHide();
       }
@@ -165,10 +168,10 @@ class Seed {
         0,
         0,
         0,
-        this.lastCoreX,
-        this.lastCoreY,
-        this.seedX + this.lastCoreX,
-        this.seedY + this.lastCoreY
+        dist(this.lastCoreX,
+          this.lastCoreY,
+          this.lastSeedX + this.lastCoreX,
+          this.lastSeedY + this.lastCoreY)
       );
     } else {
       line(
@@ -226,22 +229,20 @@ class Seed {
     this.hideY = map(this.dmouse, 0, 20, 10, 0);
   }
 
-  checkHover() {
-    if (this.dmouse <= 10) {
-      this.hover();
+  checkHover(stopHover) {
+    if (this.dmouse <= 10 && !stopHover) {
+      this.isHovering = true;
     } else {
       this.isHovering = false;
     }
   }
 
-  hover() {
-    this.isHovering = true;
-  }
-
   checkClick() {
     if (this.ifClicked) {
+    console.log("1");
       if (this.data.length != 0) {
         this.readText();
+        console.log(this.isReading);
       } else if (this.ifSelf) {
         this.writeText();
       }
@@ -250,8 +251,8 @@ class Seed {
 
   writeText() {
     if (!this.isWriting) {
-      let textAreaContainer = document.createElement("div");
-      textAreaContainer.id = "textAreaContainer";
+      let writeAreaContainer = document.createElement("div");
+      writeAreaContainer.id = "writeAreaContainer";
       let textArea = document.createElement("textarea");
       textArea.id = "textInputArea";
       textArea.placeholder =
@@ -265,56 +266,88 @@ class Seed {
         "click",
         function () {
           let userInput = textArea.value;
-
           this.data.push(userInput);
-          alert("Your texts: " + userInput);
-          this.ifClicked = false;
+          
           this.isWriting = false;
-          document.getElementById("textAreaContainer").remove();
+          this.ifClicked = false;
+
+          let divToRemove = document.getElementById("writeAreaContainer");
+          if (divToRemove) {
+            
+            this.removedWriteDiv = divToRemove;
+            divToRemove.parentNode.removeChild(divToRemove);
+          }
         }.bind(this)
       );
-      textAreaContainer.innerHTML = "";
-      document.body.appendChild(textAreaContainer);
-      textAreaContainer.appendChild(textArea);
-      textAreaContainer.appendChild(submitButton);
+      
+      if (this.removedWriteDiv) {
+        this.removedWriteDiv.innerHTML = "";
+        this.removedWriteDiv.appendChild(textArea);
+        this.removedWriteDiv.appendChild(submitButton);
+        document.body.appendChild(this.removedWriteDiv);
+        this.removedWriteDiv = null;
+      }else{
+        writeAreaContainer.innerHTML = "";
+        writeAreaContainer.appendChild(textArea);
+        writeAreaContainer.appendChild(submitButton);
+        document.body.appendChild(writeAreaContainer);
+      }
+      
+      
       this.isWriting = true;
     }
   }
 
   readText() {
     if (!this.isReading) {
-      let textAreaContainer = document.createElement("div");
-      textAreaContainer.id = "textAreaContainer";
-      let newContent = document.createTextNode(this.data);
-      textAreaContainer.appendChild(newContent);
-      let submitButton = document.createElement("button");
-      submitButton.textContent = "Back";
-      submitButton.addEventListener("click", function () {
-        this.ifClicked = false;
+      console.log(this.removedReadDiv);
+      let readAreaContainer = document.createElement("div");
+      readAreaContainer.id = "readAreaContainer";
+      let userInputContent = document.createTextNode(this.data[0]);
+      userInputContent.id = "userInput";
+      let backButton = document.createElement("button");
+      backButton.textContent = "Back";
+      backButton.addEventListener("click", function () {
         this.isReading = false;
-      });
+        this.ifClicked = false;
+        let divToRemove = document.getElementById("readAreaContainer");
+        if (divToRemove) {
+          
+          this.removedReadDiv = divToRemove;
+          divToRemove.parentNode.removeChild(divToRemove);
+        }
+        console.log(this.ifClicked);
+
+      }.bind(this));
+      
+      if (this.removedReadDiv) {
+        this.removedReadDiv.innerHTML = "";
+        this.removedReadDiv.appendChild(userInputContent);
+        this.removedReadDiv.appendChild(backButton);
+        document.body.appendChild(this.removedReadDiv);
+        this.removedReadDiv = null;
+      }else{
+        readAreaContainer.innerHTML = "";
+      document.body.appendChild(readAreaContainer);
+      readAreaContainer.appendChild(userInputContent);
+      readAreaContainer.appendChild(backButton);
+      }
+      
       this.isReading = true;
+      
     }
   }
 
   checkFly() {
     if (
-      this.layerNum == 5 &&
-      this.seedPos + (2 * PI) / (11 + this.layerNum * 3) >= 2 * PI
+      this.x + this.seedX + this.lastCoreX > windowWidth + 50 ||
+      this.x + this.seedX + this.lastCoreX < -50 ||
+      this.y + this.seedY + this.lastCoreY > windowHeight + 50 ||
+      this.y + this.seedY + this.lastCoreY < -50
     ) {
-      //check the last seed of the 5th layer of dandelion
-      if (this.data.length != 0) {
-        //if it contains data, then all the seeds of the dandelion contain data
-        this.ifFly = true;
-        if (
-          this.x + this.seedX + this.lastCoreX > windowWidth + 50 ||
-          this.x + this.seedX + this.lastCoreX < -50 ||
-          this.y + this.seedY + this.lastCoreY > windowHeight + 50 ||
-          this.y + this.seedY + this.lastCoreY < -50
-        ) {
-          this.flyDone = true;
-        }
-      }
+      if(this.ifFly){
+        this.flyDone = true;
+      } 
     }
   }
 
@@ -324,3 +357,6 @@ class Seed {
     this.flyAngle = map(noise(sin(frameCount * 0.01)), 0, 1, -PI / 30, PI / 30);
   }
 }
+
+
+

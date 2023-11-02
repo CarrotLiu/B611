@@ -19,18 +19,23 @@ let colorRange = [
   ],
 ];
 let canvas;
-let layerNum = 5;
+let currentLayer = 1;
+let maxLayerNum = 2;
+
 let prince;
 let seeds = [];
 let cores = [];
+
+let dataNum = 0;
+let stopHover = false;
+
 
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   canvas.position(0, 0);
   canvas.style("z-index", "-1");
   prince = new Prince(width / 2 + 150, height / 2 + 120);
-  layerNum = floor(random(2, 6));
-  for (let r = layerNum; r > 0; r--) {
+  for (let r = currentLayer; r > 0; r--) {
     for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + r * 3)) {
       seeds.push(
         new Seed(
@@ -45,7 +50,7 @@ function setup() {
       );
     }
   }
-  cores.push(new Core(width / 2 - 100, height / 2, layerNum, 0));
+  cores.push(new Core(width / 2 - 100, height / 2, currentLayer, 0));
 }
 
 function draw() {
@@ -76,31 +81,62 @@ function draw() {
 
   prince.update();
   prince.display();
-
+  
   if (seeds.length == 0) {
-    layerNum = 1;
-    for (let r = layerNum; r > 0; r--) {
-      for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + r * 3)) {
-        seeds.push(
-          new Seed(
-            width / 2 - 100,
-            height / 2,
-            r,
-            i,
-            random(0, 0.003),
-            random(0.001, 0.002),
-            0
-          )
-        );
+    currentLayer = 1;
+    dataNum = 0;
+    for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + currentLayer * 3)) {
+      seeds.push(
+        new Seed(
+          width / 2 - 100,
+          height / 2,
+          currentLayer,
+          i,
+          random(0, 0.003),
+          random(0.001, 0.002),
+          0
+        )
+      );
+    }
+  } else {
+    for(let i = 0; i < seeds.length; i ++){
+      dataNum += seeds[i].data.length;
+      stopHover *= seeds[i].isWriting || seeds[i].isReading;
+    }
+  
+    if(dataNum == seeds.length){
+      if(currentLayer == maxLayerNum){
+        for (let i = 0; i < seeds.length; i++) {
+          seeds[i].ifFly = true;
+        }
+        
+      } else{
+        currentLayer ++;
+        for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + currentLayer * 3)) {
+          seeds.push(
+            new Seed(
+              width / 2 - 100,
+              height / 2,
+              currentLayer,
+              i,
+              random(0, 0.003),
+              random(0.001, 0.002),
+              0
+            )
+          );
+        }
       }
     }
+    dataNum= 0;
   }
   for (let i = 0; i < seeds.length; i++) {
-    seeds[i].update();
+    seeds[i].update(stopHover);
     seeds[i].display();
     if (!seeds[i].ifFly) {
       seeds[i].lastCoreX = seeds[i].coreX;
       seeds[i].lastCoreY = seeds[i].coreY;
+      seeds[i].lastSeedX = seeds[i].seedX;
+      seeds[i].lastSeedY = seeds[i].seedY;
     }
     if (seeds[i].flyDone) {
       seeds.splice(i, 1);
@@ -134,12 +170,12 @@ function keyPressed() {
   if (keyCode == 40) {
     //ArrowDown
   }
-  if (keyCode == 75) {
-    //k
-    for (let i = 0; i < seeds.length; i++) {
-      seeds[i].ifFly = true;
-    }
-  }
+  // if (keyCode == 75) {
+  //   //k
+  //   for (let i = 0; i < seeds.length; i++) {
+  //     seeds[i].ifFly = true;
+  //   }
+  // }
   if (keyCode == 70) {
     //f
     for (let i = 0; i < seeds.length; i++) {
@@ -161,9 +197,9 @@ function keyPressed() {
       cores[i].isHovering = false;
     }
   }
-  if (key === "s") {
-    saveGif("prince-1.1", 3);
-  }
+  // if (key === "s") {
+    // saveGif("prince-1.1", 3);
+  // }
 }
 
 function mousePressed() {
@@ -173,7 +209,7 @@ function mousePressed() {
     }
   }
   for (let i = 0; i < cores.length; i++) {
-    if (cores[i].isHovering && !cores[i].isWriting) {
+    if (cores[i].isHovering && !cores[i].isReading) {
       cores[i].ifClicked = true;
     }
   }
