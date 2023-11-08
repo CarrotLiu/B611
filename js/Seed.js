@@ -29,7 +29,7 @@ class Seed {
     );
     this.hideX = 0;
     this.hideY = 0;
-    
+
     this.ifFriend = false;
     this.ifSelf = true;
 
@@ -38,6 +38,7 @@ class Seed {
     this.isWriting = false;
     this.isReading = false;
     this.data = [];
+    this.achievedData = [];
     this.removedWriteDiv = null;
     this.removedReadDiv = null;
 
@@ -168,10 +169,12 @@ class Seed {
         0,
         0,
         0,
-        dist(this.lastCoreX,
+        dist(
+          this.lastCoreX,
           this.lastCoreY,
           this.lastSeedX + this.lastCoreX,
-          this.lastSeedY + this.lastCoreY)
+          this.lastSeedY + this.lastCoreY
+        )
       );
     } else {
       line(
@@ -239,12 +242,12 @@ class Seed {
 
   checkClick() {
     if (this.ifClicked) {
-    console.log("1");
       if (this.data.length != 0) {
         this.readText();
-        console.log(this.isReading);
+        // console.log(this.isReading);
       } else if (this.ifSelf) {
         this.writeText();
+        // console.log(this.isWriting);
       }
     }
   }
@@ -255,86 +258,151 @@ class Seed {
       writeAreaContainer.id = "writeAreaContainer";
       let textArea = document.createElement("textarea");
       textArea.id = "textInputArea";
-      textArea.placeholder =
-        "Write about the characteristics you hope to possess";
+      let br = document.createElement("br");
+      if (this.data.length != 0) {
+        textArea.value = this.data[0];
+      } else {
+        textArea.placeholder =
+          "Write about the characteristics you hope to possess";
+      }
       textArea.style.width = "500px";
-      textArea.style.height = "550px";
+      textArea.style.height = "300px";
       // Create a submit button
       let submitButton = document.createElement("button");
+      submitButton.id = "button-submit";
       submitButton.textContent = "Submit";
       submitButton.addEventListener(
         "click",
         function () {
-          let userInput = textArea.value;
-          this.data.push(userInput);
-          
+          // console.log("textArea.value", textArea.value)
+          let userInput = textArea.value;//.replace(/\r?\n/g, "\n");
+          this.data[0] = userInput;
+
           this.isWriting = false;
           this.ifClicked = false;
 
           let divToRemove = document.getElementById("writeAreaContainer");
           if (divToRemove) {
-            
             this.removedWriteDiv = divToRemove;
             divToRemove.parentNode.removeChild(divToRemove);
           }
         }.bind(this)
       );
-      
+
       if (this.removedWriteDiv) {
         this.removedWriteDiv.innerHTML = "";
         this.removedWriteDiv.appendChild(textArea);
+        this.removedWriteDiv.appendChild(br);
         this.removedWriteDiv.appendChild(submitButton);
         document.body.appendChild(this.removedWriteDiv);
         this.removedWriteDiv = null;
-      }else{
+      } else {
         writeAreaContainer.innerHTML = "";
         writeAreaContainer.appendChild(textArea);
+        writeAreaContainer.appendChild(br);
         writeAreaContainer.appendChild(submitButton);
         document.body.appendChild(writeAreaContainer);
       }
-      
-      
+
       this.isWriting = true;
     }
   }
 
   readText() {
     if (!this.isReading) {
-      console.log(this.removedReadDiv);
+      // console.log(this.removedReadDiv);
       let readAreaContainer = document.createElement("div");
       readAreaContainer.id = "readAreaContainer";
       let userInputContent = document.createTextNode(this.data[0]);
+      // console.log("userInputContent", userInputContent)
       userInputContent.id = "userInput";
+      let buttonContainer = document.createElement("div");
+      buttonContainer.id = "buttonContainer";
       let backButton = document.createElement("button");
       backButton.textContent = "Back";
-      backButton.addEventListener("click", function () {
-        this.isReading = false;
-        this.ifClicked = false;
-        let divToRemove = document.getElementById("readAreaContainer");
-        if (divToRemove) {
-          
-          this.removedReadDiv = divToRemove;
-          divToRemove.parentNode.removeChild(divToRemove);
-        }
-        console.log(this.ifClicked);
-
-      }.bind(this));
-      
+      backButton.id = "button-back";
+      backButton.addEventListener(
+        "click",
+        function () {
+          this.isReading = false;
+          this.ifClicked = false;
+          let divToRemove = document.getElementById("readAreaContainer");
+          if (divToRemove) {
+            this.removedReadDiv = divToRemove;
+            divToRemove.parentNode.removeChild(divToRemove);
+          }
+        }.bind(this)
+      );
+      let reviseButton = document.createElement("button");
+      reviseButton.textContent = "Revise";
+      reviseButton.id = "button-revise";
+      reviseButton.addEventListener(
+        "click",
+        function () {
+          this.isReading = false;
+          this.ifClicked = false;
+          let divToRemove = document.getElementById("readAreaContainer");
+          if (divToRemove) {
+            this.removedReadDiv = divToRemove;
+            divToRemove.parentNode.removeChild(divToRemove);
+          }
+          this.writeText();
+        }.bind(this)
+      );
+      let deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete";
+      deleteButton.id = "button-delete";
+      deleteButton.addEventListener(
+        "click",
+        function () {
+          this.isReading = false;
+          this.ifClicked = false;
+          this.data.splice(0, 1);
+          let divToRemove = document.getElementById("readAreaContainer");
+          if (divToRemove) {
+            this.removedReadDiv = divToRemove;
+            divToRemove.parentNode.removeChild(divToRemove);
+          }
+        }.bind(this)
+      );
+      let achieveButton = document.createElement("button");
+      achieveButton.textContent = "Achieved";
+      achieveButton.id = "button-achieve";
+      achieveButton.addEventListener(
+        "click",
+        function () {
+          this.isReading = false;
+          this.ifClicked = false;
+          this.achievedData[0] = "\n" + this.data[0];
+          this.data.splice(0, 1);
+          let divToRemove = document.getElementById("readAreaContainer");
+          if (divToRemove) {
+            this.removedReadDiv = divToRemove;
+            divToRemove.parentNode.removeChild(divToRemove);
+          }
+        }.bind(this)
+      );
       if (this.removedReadDiv) {
         this.removedReadDiv.innerHTML = "";
         this.removedReadDiv.appendChild(userInputContent);
-        this.removedReadDiv.appendChild(backButton);
+        buttonContainer.appendChild(backButton);
+        buttonContainer.appendChild(reviseButton);
+        buttonContainer.appendChild(deleteButton);
+        buttonContainer.appendChild(achieveButton);
+        this.removedReadDiv.appendChild(buttonContainer);
         document.body.appendChild(this.removedReadDiv);
         this.removedReadDiv = null;
-      }else{
+      } else {
         readAreaContainer.innerHTML = "";
-      document.body.appendChild(readAreaContainer);
-      readAreaContainer.appendChild(userInputContent);
-      readAreaContainer.appendChild(backButton);
+        document.body.appendChild(readAreaContainer);
+        readAreaContainer.appendChild(userInputContent);
+        buttonContainer.appendChild(backButton);
+        buttonContainer.appendChild(reviseButton);
+        buttonContainer.appendChild(deleteButton);
+        buttonContainer.appendChild(achieveButton);
+        readAreaContainer.appendChild(buttonContainer);
       }
-      
       this.isReading = true;
-      
     }
   }
 
@@ -345,9 +413,9 @@ class Seed {
       this.y + this.seedY + this.lastCoreY > windowHeight + 50 ||
       this.y + this.seedY + this.lastCoreY < -50
     ) {
-      if(this.ifFly){
+      if (this.ifFly) {
         this.flyDone = true;
-      } 
+      }
     }
   }
 
@@ -357,6 +425,3 @@ class Seed {
     this.flyAngle = map(noise(sin(frameCount * 0.01)), 0, 1, -PI / 30, PI / 30);
   }
 }
-
-
-
