@@ -28,6 +28,7 @@ let cores = [];
 
 let dataNum = 0;
 let stopHover = false;
+let achieveData =[];
 
 
 function setup() {
@@ -101,9 +102,27 @@ function draw() {
   } else {
     for(let i = 0; i < seeds.length; i ++){
       dataNum += seeds[i].data.length;
-      stopHover *= seeds[i].isWriting || seeds[i].isReading;
+      if (!stopHover) {
+        if (seeds[i].isWriting || seeds[i].isReading) {
+          stopHover = true;
+          console.log("stop!");
+        }
+      } else {
+        // console.log(document.getElementById("writeAreaContainer"));
+        if (
+          document.getElementById("writeAreaContainer") == null &&
+          document.getElementById("readAreaContainer") == null
+        ) {
+          stopHover = false;
+        }
+        if (seeds[i].achievedData.length != 0) {
+          achieveData.push(seeds[i].achievedData[0]);
+          seeds[i].achievedData.splice(0, 1);
+        }
+      }
     }
-  
+    
+
     if(dataNum == seeds.length){
       if(currentLayer == maxLayerNum){
         for (let i = 0; i < seeds.length; i++) {
@@ -143,9 +162,10 @@ function draw() {
     }
   }
   for (let i = 0; i < cores.length; i++) {
-    cores[i].update();
+    cores[i].update(stopHover, achieveData);
     cores[i].display();
   }
+  achieveData = [];
 }
 
 function drawStem(x, y, transX, transY, colorIndex) {
