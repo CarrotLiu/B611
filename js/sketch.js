@@ -1,3 +1,4 @@
+let playlist = [];
 let colorStem = [
   [56, 130, 60], // green
   [250, 80, 80], //pink
@@ -29,13 +30,20 @@ let cores = [];
 let dataNum = 0;
 let stopHover = false;
 let achieveData =[];
+function preload() {
+  playlist[0] = loadSound("assets/LagFyrirOmmu.weba");
+  playlist[1] = loadSound("assets/ThisPlaceIsAShelter.weba");
+  playlist[2] = loadSound("assets/spring.m4a");
+  playlist[3] = loadSound("assets/autumn.m4a");
+  playlist[4] = loadSound("assets/winter.m4a");
 
+}
 
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   canvas.position(0, 0);
   canvas.style("z-index", "-1");
-  prince = new Prince(width / 2 + 150, height / 2 + 120);
+  prince = new Prince(width / 2 + 150, height / 2 + 60);
   for (let r = currentLayer; r > 0; r--) {
     for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + r * 3)) {
       seeds.push(
@@ -52,10 +60,15 @@ function setup() {
     }
   }
   cores.push(new Core(width / 2 - 100, height / 2, currentLayer, 0));
+
+  // playlist[1].play();
 }
 
 function draw() {
-  background(0);
+  for(let i = 0; i < playlist.length; i++){
+    playlist[i]
+  }
+  background(5);
   drawStem(
     map(sin(frameCount * 0.01), -1, 1, -60, 60),
     map(cos(frameCount * 0.01), -1, 1, -10, 0),
@@ -165,6 +178,12 @@ function draw() {
     cores[i].update(stopHover, achieveData);
     cores[i].display();
   }
+  //draw ground
+  push();
+  noStroke();
+  fill("#B0926A");
+  rect(0, height - 30, width, 30);
+  pop();
   achieveData = [];
 }
 
@@ -190,12 +209,7 @@ function keyPressed() {
   if (keyCode == 40) {
     //ArrowDown
   }
-  // if (keyCode == 75) {
-  //   //k
-  //   for (let i = 0; i < seeds.length; i++) {
-  //     seeds[i].ifFly = true;
-  //   }
-  // }
+
   if (keyCode == 70) {
     //f
     for (let i = 0; i < seeds.length; i++) {
