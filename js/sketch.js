@@ -1,4 +1,13 @@
+import {io} from "socket.io-client"
+
+const socket = io("http://localhost:3000")
+socket.on("connect", ()=>{
+  
+})
+
+socket.emit("data", 10, "hi", {a:"a"})
 let playlist = [];
+let ifPlaying = false;
 let colorStem = [
   [56, 130, 60], // green
   [250, 80, 80], //pink
@@ -65,9 +74,7 @@ function setup() {
 }
 
 function draw() {
-  for(let i = 0; i < playlist.length; i++){
-    playlist[i]
-  }
+  
   background(5);
   drawStem(
     map(sin(frameCount * 0.01), -1, 1, -60, 60),
