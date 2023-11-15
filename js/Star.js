@@ -2,6 +2,7 @@ class Star{
     constructor(x, y){
         this.x = x;
         this.y = y;
+        this.stars = [];
         this.alpha = 255;
         this.size = 10;
         this.lifeSpan = floor(random(120, 360));

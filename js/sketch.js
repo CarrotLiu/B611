@@ -1,13 +1,23 @@
-import {io} from "socket.io-client"
+// import {io} from "socket.io-client";
 
-const socket = io("http://localhost:3000")
-socket.on("connect", ()=>{
+// const socket = io("http://localhost:3000")
+// socket.on("connect", ()=>{
   
-})
+// })
 
-socket.emit("data", 10, "hi", {a:"a"})
+// socket.emit("data", 10, "hi", {a:"a"})
+// import * as p5 from "../lib/p5.js"
+// import * as p5sound from "../lib/p5.sound.min.js"
+// import {Core} from "./Core.js";
+// import {Prince} from "./Prince.js";
+// import {Seed} from "./Seed.js";
+
 let playlist = [];
 let ifPlaying = false;
+
+let meteor;
+let stars = [];
+
 let colorStem = [
   [56, 130, 60], // green
   [250, 80, 80], //pink
@@ -52,6 +62,7 @@ function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   canvas.position(0, 0);
   canvas.style("z-index", "-1");
+  // meteor = new Meteor();
   prince = new Prince(width / 2 + 150, height / 2 + 60);
   for (let r = currentLayer; r > 0; r--) {
     for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + r * 3)) {
@@ -76,6 +87,14 @@ function setup() {
 function draw() {
   
   background(5);
+  // if(meteor.x > window.innerWidth + 100 ||
+  //   meteor.x < -100 || 
+  //   meteor.y > window.innerHeight + 100
+  // ){
+  //   meteor = new Star(100, 100);
+  // } else {
+  //     meteor.display();
+  // }
   drawStem(
     map(sin(frameCount * 0.01), -1, 1, -60, 60),
     map(cos(frameCount * 0.01), -1, 1, -10, 0),
