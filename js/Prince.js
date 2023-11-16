@@ -26,14 +26,17 @@ class Prince {
     this.walkCount = 0;
     this.scarfDir = 1;
     this.ifSit = false;
+    this.dataMax = 10;
+    this.coreData = 0;
+    this.maskAlpha = 255;
   }
 
-  display() {
+  display(dataNum) {
     push();
     translate(this.x, this.y);
     this.drawHead();
     this.drawEye();
-    this.drawCloth();
+    this.drawCloth(dataNum);
     pop();
   }
 
@@ -160,6 +163,33 @@ class Prince {
     );
     endShape();
     pop();
+    if(this.coreData <= 10){
+      push();
+      scale(this.scarfDir, 1);
+      noStroke();
+      fill(130, this.maskAlpha);
+      beginShape();
+      vertex(53, 28);
+      bezierVertex(
+        85,
+        20 + this.floatRate(0.03, -50, 40),
+        85,
+        20 + this.floatRate(0.04, -50, 40),
+        150,
+        22 + this.floatRate(0.02, -50, 46)
+      );
+      vertex(138, 60 + this.floatRate(0.02, -50, 48));
+      bezierVertex(
+        85,
+        45 + this.floatRate(0.03, -50, 40),
+        85,
+        45 + this.floatRate(0.04, -50, 40),
+        50,
+        45
+      );
+      endShape();
+      pop();
+    }
   }
 
   scarfNeck() {
@@ -173,6 +203,18 @@ class Prince {
     bezierVertex(15, 65, -15, 65, -55, 53);
     endShape();
     pop();
+    if(this.coreData <= this.dataMax){
+      push();
+      noStroke();
+      fill(150, this.maskAlpha);
+      beginShape();
+      vertex(-54, 28);
+      bezierVertex(-15, 40, 15, 40, 54, 28);
+      vertex(55, 53);
+      bezierVertex(15, 65, -15, 65, -55, 53);
+      endShape();
+      pop();
+    }
   }
 
   cloth() {
@@ -280,9 +322,79 @@ class Prince {
     );
     endShape();
     pop();
+
+    if(this.coreData <= 10){
+      //upper cloth
+      push();
+      noStroke();
+      fill(100, this.maskAlpha);
+      beginShape();
+      vertex(controlULX, controlULY);
+      bezierVertex(
+        anchorULX,
+        anchorULY,
+        anchorDLX,
+        anchorDLY,
+        controlDLX,
+        controlDLY
+      );
+      vertex(controlDRX, controlDRY);
+      bezierVertex(
+        anchorDRX,
+        anchorDRY,
+        anchorURX,
+        anchorURY,
+        controlURX,
+        controlURY
+      );
+      endShape();
+
+      //lower edge
+      noStroke();
+      fill(100, this.maskAlpha);
+      beginShape();
+      vertex(controlDLX, controlDLY);
+      bezierVertex(
+        anchorULEX,
+        anchorULEY,
+        anchorUREX,
+        anchorUREY,
+        controlDRX,
+        controlDRY
+      );
+      vertex(controlDRX, controlDRY);
+      vertex(controlDLX, controlDLY);
+      endShape();
+
+      //lower edge darker
+      fill(60, this.maskAlpha);
+      beginShape();
+      vertex(controlDLX, controlDLY);
+      bezierVertex(
+        anchorULEX,
+        anchorULEY,
+        anchorUREX,
+        anchorUREY,
+        controlDRX,
+        controlDRY
+      );
+      vertex(controlDRX, controlDRY);
+      bezierVertex(
+        anchorDREX,
+        anchorDREY,
+        anchorDLEX,
+        anchorDLEY,
+        controlDLX,
+        controlDLY
+      );
+      endShape();
+      pop();
+    }
   }
 
-  drawCloth() {
+  drawCloth(dataNum) {
+    this.coreData = dataNum
+    this.maskAlpha = map(this.coreData, 0, 10, 255, 0);
     this.scarfFloat();
     this.cloth();
     this.scarfNeck();

@@ -19,6 +19,7 @@ class Core {
     this.isWriting = false;
     this.isReading = false;
     this.data = [];
+    this.dataNum = 0;
     this.removedWriteDiv = null;
     this.removedReadDiv = null;
 
@@ -91,6 +92,7 @@ class Core {
     if (achieveData) {
       for (let i = 0; i < achieveData.length; i++) {
         this.data[0] += achieveData[i];
+        this.dataNum ++;
       }
     }
   }
@@ -119,7 +121,7 @@ class Core {
         function () {
           let userInput = textArea.value;
           this.data[0] = userInput;
-
+          this.dataNum ++;
           this.isWriting = false;
           this.ifClicked = false;
 
@@ -199,6 +201,7 @@ class Core {
           this.isReading = false;
           this.ifClicked = false;
           this.data.splice(0, 1);
+          this.dataNum = 0;
           let divToRemove = document.getElementById("readAreaContainer");
           if (divToRemove) {
             this.removedReadDiv = divToRemove;
@@ -255,3 +258,5 @@ class Core {
     );
   }
 }
+
+

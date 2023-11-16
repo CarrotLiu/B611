@@ -64,7 +64,7 @@ function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   canvas.position(0, 0);
   canvas.style("z-index", "-1");
-  meteor = new Meteor();
+  // meteor = new Meteor();
   prince = new Prince(width / 2 + 150, height / 2 + 60);
   for (let r = currentLayer; r > 0; r--) {
     for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + r * 3)) {
@@ -122,7 +122,7 @@ function draw() {
   }
 
   prince.update();
-  prince.display();
+  prince.display(cores[0].dataNum);
   
   if (seeds.length == 0) {
     currentLayer = 1;
@@ -206,6 +206,7 @@ function draw() {
     cores[i].update(stopHover, achieveData);
     cores[i].display();
   }
+  
   //draw ground
   push();
   noStroke();
