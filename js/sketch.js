@@ -10,7 +10,9 @@
 // import * as p5sound from "../lib/p5.sound.min.js"
 // import {Core} from "./Core.js";
 // import {Prince} from "./Prince.js";
-// import {Seed} from "./Seed.js";
+
+// import {Meteor} from "./js/Meteor.js";
+// let Meteor = require("./Meteor.js");
 
 let playlist = [];
 let ifPlaying = false;
@@ -62,7 +64,7 @@ function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   canvas.position(0, 0);
   canvas.style("z-index", "-1");
-  // meteor = new Meteor();
+  meteor = new Meteor();
   prince = new Prince(width / 2 + 150, height / 2 + 60);
   for (let r = currentLayer; r > 0; r--) {
     for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + r * 3)) {
