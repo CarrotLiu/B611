@@ -111,36 +111,56 @@ class Seed {
       pop();
     } else {
       push();
-      this.assignColor(fluct1);
-      noStroke();
+      
       if (this.data.length != 0) {
+        // push();
+        // fill(255, 60);
+        // circle(
+        //   0,
+        //   0,
+        //   5 +
+        //     map(
+        //       sin(this.seedPos + frameCount * 0.05),
+        //       -1,
+        //       1,
+        //       3,
+        //       6 + this.layerNum * 3.5
+        //     )
+        // );
+        // pop();
         push();
-        fill(255, 255, 255, 60);
+        this.assignColor(fluct1);
+        noStroke();
         circle(
           0,
           0,
-          5 +
-            map(
-              sin(this.seedPos + frameCount * 0.05),
-              -1,
-              1,
-              3,
-              6 + this.layerNum * 3.5
-            )
+          map(
+            sin(this.seedPos + frameCount * 0.05),
+            -1,
+            1,
+            3,
+            6 + this.layerNum * 3.5
+          )
+        );
+        pop();
+      }else{
+        push();
+        fill(255);
+        noStroke();
+        circle(
+          0,
+          0,
+          map(
+            sin(this.seedPos + frameCount * 0.05),
+            -1,
+            1,
+            3,
+            6 + this.layerNum * 3.5
+          )
         );
         pop();
       }
-      circle(
-        0,
-        0,
-        map(
-          sin(this.seedPos + frameCount * 0.05),
-          -1,
-          1,
-          3,
-          6 + this.layerNum * 3.5
-        )
-      );
+      
       pop();
     }
 
