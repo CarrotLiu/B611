@@ -26,7 +26,7 @@ class Prince {
     this.walkCount = 0;
     this.scarfDir = 1;
     this.ifSit = false;
-    this.dataMax = 10;
+    this.dataMax = 30;
     this.coreData = 0;
     this.maskAlpha = 255;
   }
@@ -81,16 +81,32 @@ class Prince {
     strokeWeight(2);
     stroke(125, 206, 19);
     noFill();
+    this.maskAlpha = map(this.coreData, 0, this.dataMax, 255, 0);
     bezier(this.hairX, this.hairY, 0, -70, 0, -30, 0, -30);
+    if(this.coreData < this.dataMax){
+      
+    }
     for (let i = 0; i < 100; i++) {
       noStroke();
-      fill(244, 206, 20, 10 - floor(map(i, 0, 99, 5, 0)));
-      circle(this.hairX, this.hairY, i * 0.35);
       fill(255, 35 - floor(map(i, 0, 99, 5, 0)));
       ellipse(0, 0, 25 + i);
     }
+    for(let i = 0; i < 30 + map(this.coreData, 0, this.dataMax, 0, 70); i ++){
+      noStroke();
+      fill(244, 206, 20, 10 - floor(map(i, 0, 99, 5, 0)));
+      circle(this.hairX, this.hairY, i * 0.35);
+    }
+    
     fill(244, 206, 10);
     circle(this.hairX, this.hairY, 15);
+
+    push();
+    if(this.coreData < this.dataMax){
+      noStroke();
+      fill(255, this.maskAlpha);
+      circle(this.hairX, this.hairY, 15);
+    }
+    pop();
     stroke(0);
     strokeWeight(5);
     pop();
@@ -163,7 +179,7 @@ class Prince {
     );
     endShape();
     pop();
-    if(this.coreData <= 10){
+    if(this.coreData <= this.dataMax){
       push();
       scale(this.scarfDir, 1);
       noStroke();
@@ -323,7 +339,7 @@ class Prince {
     endShape();
     pop();
 
-    if(this.coreData <= 10){
+    if(this.coreData <= this.dataMax){
       //upper cloth
       push();
       noStroke();
@@ -394,7 +410,8 @@ class Prince {
 
   drawCloth(dataNum) {
     this.coreData = dataNum
-    this.maskAlpha = map(this.coreData, 0, 10, 255, 0);
+    this.maskAlpha = map(this.coreData, 0, this.dataMax, 255, 0);
+    // console.log(this.coreData, this.maskAlpha);
     this.scarfFloat();
     this.cloth();
     this.scarfNeck();

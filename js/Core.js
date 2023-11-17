@@ -19,7 +19,10 @@ class Core {
     this.isWriting = false;
     this.isReading = false;
     this.data = [];
+
+    this.ifCheckDataNum = false;
     this.dataNum = 0;
+
     this.removedWriteDiv = null;
     this.removedReadDiv = null;
 
@@ -47,6 +50,11 @@ class Core {
     this.coreY = map(cos(frameCount * 0.01), -1, 1, -10, 0);
     this.checkAchieve(achieveData);
     this.checkClick();
+    // console.log(this.ifCheckDataNum);
+    if(this.ifCheckDataNum){
+      this.checkDataNum();
+      this.ifCheckDataNum = false;
+    }
   }
   drawCore() {
     push();
@@ -89,11 +97,12 @@ class Core {
   }
 
   checkAchieve(achieveData) {
-    if (achieveData) {
+    if (achieveData.length != 0) {
+      // console.log(achieveData);
       for (let i = 0; i < achieveData.length; i++) {
         this.data[0] += achieveData[i];
-        this.dataNum ++;
       }
+      this.ifCheckDataNum = true;
     }
   }
 
@@ -121,7 +130,8 @@ class Core {
         function () {
           let userInput = textArea.value;
           this.data[0] = userInput;
-          this.dataNum ++;
+          this.ifCheckDataNum = true;
+          
           this.isWriting = false;
           this.ifClicked = false;
 
@@ -256,6 +266,22 @@ class Core {
         colorRange[this.colorIndex][1][2]
       )
     );
+  }
+
+  checkDataNum(){
+
+    if(this.data.length != 0 ){
+      console.log("runcheckdata");
+      for(let i = 0; i < this.data[0].length; i ++){
+        // console.log(this.data[0][i]);
+        if(this.data[0][i] == "\n"){
+          this.dataNum ++;
+        }
+      }
+      if(this.dataNum == 0){
+        this.dataNum = 1;
+      }
+    }
   }
 }
 

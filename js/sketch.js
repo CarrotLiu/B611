@@ -49,6 +49,7 @@ let seeds = [];
 let cores = [];
 
 let dataNum = 0;
+let coreDataNum = 0;
 let stopHover = false;
 let achieveData =[];
 function preload() {
@@ -122,6 +123,7 @@ function draw() {
   }
 
   prince.update();
+ 
   prince.display(cores[0].dataNum);
   
   if (seeds.length == 0) {
@@ -208,11 +210,11 @@ function draw() {
   }
   
   //draw ground
-  push();
-  noStroke();
-  fill("#B0926A");
-  rect(0, height - 30, width, 30);
-  pop();
+  // push();
+  // noStroke();
+  // fill("#B0926A");
+  // rect(0, height - 30, width, 30);
+  // pop();
   achieveData = [];
 }
 
@@ -258,6 +260,16 @@ function keyPressed() {
     for (let i = 0; i < cores.length; i++) {
       cores[i].ifFriend = false;
       cores[i].isHovering = false;
+    }
+  }
+
+  if(keyCode == 68){
+    for(let i = 0; i < seeds.length; i ++){
+      if(seeds[i].data.length == 0){
+        // console.log("test");
+        seeds[i].data[0] = "this is a test";
+        break;
+      }
     }
   }
   // if (key === "s") {
