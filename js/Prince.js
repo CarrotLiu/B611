@@ -91,7 +91,7 @@ class Prince {
       fill(255, 35 - floor(map(i, 0, 99, 5, 0)));
       ellipse(0, 0, 25 + i);
     }
-    for(let i = 0; i < 30 + map(this.coreData, 0, this.dataMax, 0, 70); i ++){
+    for(let i = 0; i < 30 + constrain(map(this.coreData, 0, this.dataMax, 0, 70), 0, 70); i ++){
       noStroke();
       fill(244, 206, 20, 10 - floor(map(i, 0, 99, 5, 0)));
       circle(this.hairX, this.hairY, i * 0.35);

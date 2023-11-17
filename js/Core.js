@@ -22,6 +22,7 @@ class Core {
 
     this.ifCheckDataNum = false;
     this.dataNum = 0;
+    this.dataMax = 30;
 
     this.removedWriteDiv = null;
     this.removedReadDiv = null;
@@ -60,21 +61,37 @@ class Core {
     push();
     noStroke();
     if (this.isHovering) {
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 80; i++) {
         fill(250, 30, 20, floor(map(i, 0, 99, 0, 5)));
         circle(
           this.coreX,
           this.coreY,
           floor(i * 0.5 + map(this.layerNum, 1, 8, 30, 45))
         );
-        fill(250, 30, 20);
       }
+      fill(250, 30, 20);
     } else {
-      let fluct2 = sin(PI / 2 + frameCount * 0.01);
-      this.assignColor(fluct2);
+      // let fluct2 = sin(PI / 2 + frameCount * 0.01);
+      // this.assignColor(fluct2);
+      for (let i = 0; i < 10 + constrain(map(this.dataNum, 0, this.dataMax, 0, 70), 0, 70); i++) {
+        fill(244, 206, 20, floor(map(i, 0, 99, 0, 5)));
+        circle(
+          this.coreX,
+          this.coreY,
+          floor(i * 0.5 + map(this.layerNum, 1, 8, 30, 45))
+        );
+      }
+      fill(244, 206, 20);
     }
     circle(this.coreX, this.coreY, map(this.layerNum, 1, 8, 30, 45));
-
+    
+    
+    
+    if(this.dataNum <= this.dataMax){
+      let alphaMask = map(this.dataNum, 0, this.dataMax, 255, 0);
+      fill(255, alphaMask);
+      circle(this.coreX, this.coreY, map(this.layerNum, 1, 8, 30, 45));
+    }
     pop();
   }
 
@@ -105,7 +122,7 @@ class Core {
       this.ifCheckDataNum = true;
     }
   }
-
+ 
   writeText() {
     if (!this.isWriting) {
       let writeAreaContainer = document.createElement("div");
