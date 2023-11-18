@@ -70,6 +70,7 @@ class Core {
         );
       }
       fill(250, 30, 20);
+      
     } else {
       // let fluct2 = sin(PI / 2 + frameCount * 0.01);
       // this.assignColor(fluct2);
@@ -89,7 +90,12 @@ class Core {
     
     if(this.dataNum <= this.dataMax){
       let alphaMask = map(this.dataNum, 0, this.dataMax, 255, 0);
-      fill(255, alphaMask);
+      if(this.isHovering){
+        fill(250, 30, 20);
+      }else{
+        fill(255, alphaMask);
+      }
+      
       circle(this.coreX, this.coreY, map(this.layerNum, 1, 8, 30, 45));
     }
     pop();

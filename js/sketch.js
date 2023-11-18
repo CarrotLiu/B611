@@ -66,7 +66,10 @@ function setup() {
   canvas.position(0, 0);
   canvas.style("z-index", "-1");
   // meteor = new Meteor();
-  prince = new Prince(width / 2 + 150, height / 2 + 60);
+  prince = new Prince(width / 2 + 100, height / 2 + 60);
+  for(let i = 0; i < 150; i ++){
+    stars.push(new Star(random(0, width), random(0, height)));
+  }
   for (let r = currentLayer; r > 0; r--) {
     for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + r * 3)) {
       seeds.push(
@@ -98,6 +101,10 @@ function draw() {
   // } else {
   //     meteor.display();
   // }
+  for(let i = 0; i < stars.length; i++){
+    stars[i].update()
+    stars[i].display();
+  }
   drawStem(
     map(sin(frameCount * 0.01), -1, 1, -60, 60),
     map(cos(frameCount * 0.01), -1, 1, -10, 0),

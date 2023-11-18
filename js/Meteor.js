@@ -1,4 +1,6 @@
 // import chroma from "chroma-js"
+// let chroma = require("chroma-js");
+
 class Meteor{
     constructor(){
         this.x = round(random(0, window.innerWidth));;
@@ -57,3 +59,5 @@ class Meteor{
     }
 
 }
+
+export {Meteor};
