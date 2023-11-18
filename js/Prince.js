@@ -114,7 +114,7 @@ class Prince {
 
   drawEye() {
     push();
-    stroke(0);
+    stroke(5);
     strokeWeight(5);
     translate(this.eyeX, this.eyeY);
     ///open eye

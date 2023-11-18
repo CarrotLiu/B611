@@ -20,6 +20,8 @@ let ifPlaying = false;
 let meteor;
 let stars = [];
 
+let sceneIndex = 0;
+
 let colorStem = [
   [56, 130, 60], // green
   [250, 80, 80], //pink
@@ -54,10 +56,10 @@ let stopHover = false;
 let achieveData =[];
 function preload() {
   playlist[0] = loadSound("assets/LagFyrirOmmu.weba");
-  playlist[1] = loadSound("assets/ThisPlaceIsAShelter.weba");
-  playlist[2] = loadSound("assets/spring.m4a");
-  playlist[3] = loadSound("assets/autumn.m4a");
-  playlist[4] = loadSound("assets/winter.m4a");
+  // playlist[1] = loadSound("assets/ThisPlaceIsAShelter.weba");
+  // playlist[2] = loadSound("assets/spring.m4a");
+  // playlist[3] = loadSound("assets/autumn.m4a");
+  // playlist[4] = loadSound("assets/winter.m4a");
 
 }
 
@@ -87,11 +89,13 @@ function setup() {
   }
   cores.push(new Core(width / 2 - 100, height / 2, currentLayer, 0));
 
-  // playlist[1].play();
+  playlist[0].play();
 }
 
 function draw() {
-  
+  if(!playlist[0].isPlaying()){
+    playlist[0].loop();
+  }
   background(5);
   // if(meteor.x > window.innerWidth + 100 ||
   //   meteor.x < -100 || 
@@ -101,6 +105,15 @@ function draw() {
   // } else {
   //     meteor.display();
   // }
+  if(sceneIndex == 0){
+
+    // let startBtn = document.createElement("start");
+    // startBtn.id = "button-start";
+  } else if(sceneIndex == 1){
+
+  }
+  // let guideBtn = document.createElement("guide");
+  // guideBtn.id = "button-guide";
   for(let i = 0; i < stars.length; i++){
     stars[i].update()
     stars[i].display();
@@ -155,7 +168,7 @@ function draw() {
       if (!stopHover) {
         if (seeds[i].isWriting || seeds[i].isReading) {
           stopHover = true;
-          console.log("stop!");
+          // console.log("stop!");
         }
       } else {
         // console.log(document.getElementById("writeAreaContainer"));
