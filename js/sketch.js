@@ -2,7 +2,7 @@
 
 // const socket = io("http://localhost:3000")
 // socket.on("connect", ()=>{
-  
+
 // })
 
 // socket.emit("data", 10, "hi", {a:"a"})
@@ -53,14 +53,13 @@ let cores = [];
 let dataNum = 0;
 let coreDataNum = 0;
 let stopHover = false;
-let achieveData =[];
+let achieveData = [];
 function preload() {
   playlist[0] = loadSound("assets/LagFyrirOmmu.weba");
   // playlist[1] = loadSound("assets/ThisPlaceIsAShelter.weba");
   // playlist[2] = loadSound("assets/spring.m4a");
   // playlist[3] = loadSound("assets/autumn.m4a");
   // playlist[4] = loadSound("assets/winter.m4a");
-
 }
 
 function setup() {
@@ -69,7 +68,7 @@ function setup() {
   canvas.style("z-index", "-1");
   // meteor = new Meteor();
   prince = new Prince(width / 2 + 100, height / 2 + 60);
-  for(let i = 0; i < 150; i ++){
+  for (let i = 0; i < 150; i++) {
     stars.push(new Star(random(0, width), random(0, height)));
   }
   for (let r = currentLayer; r > 0; r--) {
@@ -93,29 +92,28 @@ function setup() {
 }
 
 function draw() {
-  if(!playlist[0].isPlaying()){
+  if (!playlist[0].isPlaying()) {
     playlist[0].loop();
   }
+  console.log(playlist[0].isPlaying());
   background(5);
   // if(meteor.x > window.innerWidth + 100 ||
-  //   meteor.x < -100 || 
+  //   meteor.x < -100 ||
   //   meteor.y > window.innerHeight + 100
   // ){
   //   meteor = new Star(100, 100);
   // } else {
   //     meteor.display();
   // }
-  if(sceneIndex == 0){
-
+  if (sceneIndex == 0) {
     // let startBtn = document.createElement("start");
     // startBtn.id = "button-start";
-  } else if(sceneIndex == 1){
-
+  } else if (sceneIndex == 1) {
   }
   // let guideBtn = document.createElement("guide");
   // guideBtn.id = "button-guide";
-  for(let i = 0; i < stars.length; i++){
-    stars[i].update()
+  for (let i = 0; i < stars.length; i++) {
+    stars[i].update();
     stars[i].display();
   }
   drawStem(
@@ -143,9 +141,9 @@ function draw() {
   }
 
   prince.update();
- 
+
   prince.display(cores[0].dataNum);
-  
+
   if (seeds.length == 0) {
     currentLayer = 1;
     dataNum = 0;
@@ -163,7 +161,7 @@ function draw() {
       );
     }
   } else {
-    for(let i = 0; i < seeds.length; i ++){
+    for (let i = 0; i < seeds.length; i++) {
       dataNum += seeds[i].data.length;
       if (!stopHover) {
         if (seeds[i].isWriting || seeds[i].isReading) {
@@ -184,16 +182,14 @@ function draw() {
         }
       }
     }
-    
 
-    if(dataNum == seeds.length){
-      if(currentLayer == maxLayerNum){
+    if (dataNum == seeds.length) {
+      if (currentLayer == maxLayerNum) {
         for (let i = 0; i < seeds.length; i++) {
           seeds[i].ifFly = true;
         }
-        
-      } else{
-        currentLayer ++;
+      } else {
+        currentLayer++;
         for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + currentLayer * 3)) {
           seeds.push(
             new Seed(
@@ -209,7 +205,7 @@ function draw() {
         }
       }
     }
-    dataNum= 0;
+    dataNum = 0;
   }
   for (let i = 0; i < seeds.length; i++) {
     seeds[i].update(stopHover);
@@ -228,7 +224,7 @@ function draw() {
     cores[i].update(stopHover, achieveData);
     cores[i].display();
   }
-  
+
   //draw ground
   // push();
   // noStroke();
@@ -270,7 +266,7 @@ function keyPressed() {
       cores[i].ifFriend = true;
     }
   }
-  
+
   if (keyCode == 66) {
     //b
     for (let i = 0; i < seeds.length; i++) {
@@ -283,9 +279,9 @@ function keyPressed() {
     }
   }
 
-  if(keyCode == 68){
-    for(let i = 0; i < seeds.length; i ++){
-      if(seeds[i].data.length == 0){
+  if (keyCode == 68) {
+    for (let i = 0; i < seeds.length; i++) {
+      if (seeds[i].data.length == 0) {
         // console.log("test");
         seeds[i].data[0] = "this is a test";
         break;
@@ -293,7 +289,7 @@ function keyPressed() {
     }
   }
   // if (key === "s") {
-    // saveGif("prince-1.1", 3);
+  // saveGif("prince-1.1", 3);
   // }
 }
 
