@@ -83,25 +83,28 @@ class Prince {
     noFill();
     this.maskAlpha = map(this.coreData, 0, this.dataMax, 255, 0);
     bezier(this.hairX, this.hairY, 0, -70, 0, -30, 0, -30);
-    if(this.coreData < this.dataMax){
-      
+    if (this.coreData < this.dataMax) {
     }
     for (let i = 0; i < 100; i++) {
       noStroke();
       fill(255, 35 - floor(map(i, 0, 99, 5, 0)));
       ellipse(0, 0, 25 + i);
     }
-    for(let i = 0; i < 30 + constrain(map(this.coreData, 0, this.dataMax, 0, 70), 0, 70); i ++){
+    for (
+      let i = 0;
+      i < 30 + constrain(map(this.coreData, 0, this.dataMax, 0, 70), 0, 70);
+      i++
+    ) {
       noStroke();
       fill(244, 206, 20, 10 - floor(map(i, 0, 99, 5, 0)));
       circle(this.hairX, this.hairY, i * 0.35);
     }
-    
+
     fill(244, 206, 10);
     circle(this.hairX, this.hairY, 15);
 
     push();
-    if(this.coreData < this.dataMax){
+    if (this.coreData < this.dataMax) {
       noStroke();
       fill(255, this.maskAlpha);
       circle(this.hairX, this.hairY, 15);
@@ -114,7 +117,7 @@ class Prince {
 
   drawEye() {
     push();
-    stroke(5);
+    stroke(0);
     strokeWeight(5);
     translate(this.eyeX, this.eyeY);
     ///open eye
@@ -179,7 +182,7 @@ class Prince {
     );
     endShape();
     pop();
-    if(this.coreData <= this.dataMax){
+    if (this.coreData <= this.dataMax) {
       push();
       scale(this.scarfDir, 1);
       noStroke();
@@ -219,7 +222,7 @@ class Prince {
     bezierVertex(15, 65, -15, 65, -55, 53);
     endShape();
     pop();
-    if(this.coreData <= this.dataMax){
+    if (this.coreData <= this.dataMax) {
       push();
       noStroke();
       fill(150, this.maskAlpha);
@@ -339,7 +342,7 @@ class Prince {
     endShape();
     pop();
 
-    if(this.coreData <= this.dataMax){
+    if (this.coreData <= this.dataMax) {
       //upper cloth
       push();
       noStroke();
@@ -409,7 +412,7 @@ class Prince {
   }
 
   drawCloth(dataNum) {
-    this.coreData = dataNum
+    this.coreData = dataNum;
     this.maskAlpha = map(this.coreData, 0, this.dataMax, 255, 0);
     // console.log(this.coreData, this.maskAlpha);
     this.scarfFloat();
