@@ -1,5 +1,5 @@
 class Seed {
-  constructor(x, y, layer, sdPos, dirx, diry, ci) {
+  constructor(x, y, layer, sdPos, dirx, diry, ci, freq) {
     this.x = x;
     this.y = y;
     this.coreX = 0;
@@ -13,6 +13,7 @@ class Seed {
 
     this.layerNum = layer;
     this.seedPos = sdPos;
+    this.freq = freq;
 
     this.xSpd = 0;
     this.ySpd = 0;
@@ -68,8 +69,8 @@ class Seed {
       } else {
         this.checkHide();
       }
-      this.coreX = map(sin(frameCount * 0.01), -1, 1, -60, 60);
-      this.coreY = map(cos(frameCount * 0.01), -1, 1, -10, 0);
+      this.coreX = map(sin(frameCount * 0.01 + this.freq), -1, 1, -60, 60);
+      this.coreY = map(cos(frameCount * 0.01 + this.freq), -1, 1, -10, 0);
       this.seedX =
         sin((PI / 2) * (this.layerNum + 1) + this.seedPos) *
           (40 + this.layerNum * 20) +
@@ -111,7 +112,7 @@ class Seed {
       pop();
     } else {
       push();
-      
+
       if (this.data.length != 0) {
         // push();
         // fill(255, 60);
@@ -143,7 +144,7 @@ class Seed {
           )
         );
         pop();
-      }else{
+      } else {
         push();
         fill(255);
         noStroke();
@@ -160,7 +161,7 @@ class Seed {
         );
         pop();
       }
-      
+
       pop();
     }
 
@@ -295,7 +296,7 @@ class Seed {
         "click",
         function () {
           // console.log("textArea.value", textArea.value)
-          let userInput = textArea.value;//.replace(/\r?\n/g, "\n");
+          let userInput = textArea.value; //.replace(/\r?\n/g, "\n");
           this.data[0] = userInput;
 
           this.isWriting = false;

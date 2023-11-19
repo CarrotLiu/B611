@@ -1,5 +1,5 @@
 class Prince {
-  constructor(x, y) {
+  constructor(x, y, freq) {
     this.x = x;
     this.y = y;
     this.spdX = 1;
@@ -14,6 +14,7 @@ class Prince {
     this.eyeHY = 0;
     this.eyeVX = 16;
     this.eyeVY = 3;
+    this.freq = freq;
     this.blinkInterval = 360;
     this.blinkCount = 0;
     this.ifBlink = false;
@@ -44,11 +45,11 @@ class Prince {
     if (this.blinkInterval <= 0) {
       this.ifBlink = true;
     }
-    let hairx = map(sin(frameCount * 0.01), -1, 1, -20, 20);
-    let hairy = map(cos(frameCount * 0.01), -1, 1, -100, -90);
+    let hairx = map(sin(frameCount * 0.01 + this.freq), -1, 1, -20, 20);
+    let hairy = map(cos(frameCount * 0.01 + this.freq), -1, 1, -100, -90);
     let eyeOffsetX = map(mouseX, 0, width, -20, 20);
     let eyeOffsetY = map(mouseY, 0, height, -26, 10);
-    let yFloat = sin(frameCount * 0.008) * 0.3;
+    let yFloat = sin(frameCount * 0.008 + this.freq) * 0.3;
     this.eyeHX = 0;
     this.eyeHY = 0;
     this.eyeVX = 16;
@@ -421,24 +422,26 @@ class Prince {
   }
 
   floatRate(f, min, max) {
-    let scarfFluctY = map(sin(frameCount * f), -1.6, 1.6, min, max);
+    let scarfFluctY = map(sin(frameCount * f + this.freq), -1.6, 1.6, min, max);
     return scarfFluctY;
   }
 
   idle(eyeOffsetX, eyeOffsetY, hairx, hairy, yFloat) {
-    this.eyeX = eyeOffsetX;
-    this.eyeY = eyeOffsetY;
+    // this.eyeX = eyeOffsetX;
+    // this.eyeY = eyeOffsetY;
+    this.eyeX = 0;
+    this.eyeY = 0;
     this.hairX = hairx;
     this.hairY = hairy;
     this.y += yFloat;
   }
 
   walk(hairx, hairy, yFloat) {
-    if (keyCode == 39) {
+    if (keyCode == 39 || key == "d") {
       //ArrowRight
       this.walkDir = 1;
       this.scarfDir = -1;
-    } else if (keyCode == 37) {
+    } else if (keyCode == 37 || key == "a") {
       // ArrowLeft
       this.walkDir = -1;
       this.scarfDir = 1;

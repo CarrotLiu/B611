@@ -17,6 +17,9 @@
 let playlist = [];
 let ifPlaying = false;
 
+let freq;
+let friend = false;
+
 let meteor;
 let stars = [];
 
@@ -47,7 +50,9 @@ let currentLayer = 1;
 let maxLayerNum = 2;
 
 let prince;
+let prince2;
 let seeds = [];
+let seeds2 = [];
 let cores = [];
 
 let dataNum = 0;
@@ -66,8 +71,10 @@ function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   canvas.position(0, 0);
   canvas.style("z-index", "-1");
+  freq = random(PI, 2 * PI);
   // meteor = new Meteor();
-  prince = new Prince(width / 2 + 100, height / 2 + 60);
+  prince = new Prince(width / 2 - 200, height / 2 + 60, 0);
+  prince2 = new Prince(width / 2 + 200, height / 2 + 80, freq);
   for (let i = 0; i < 150; i++) {
     stars.push(new Star(random(0, width), random(0, height)));
   }
@@ -75,18 +82,37 @@ function setup() {
     for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + r * 3)) {
       seeds.push(
         new Seed(
-          width / 2 - 100,
+          300,
           height / 2,
           r,
           i,
           random(0, 0.003),
           random(0.001, 0.002),
+          0,
           0
         )
       );
     }
   }
-  cores.push(new Core(width / 2 - 100, height / 2, currentLayer, 0));
+  cores.push(new Core(300, height / 2, currentLayer, 0, 0));
+
+  for (let r = currentLayer; r > 0; r--) {
+    for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + r * 3)) {
+      seeds2.push(
+        new Seed(
+          width - 300,
+          height / 2,
+          r,
+          i,
+          random(0, 0.003),
+          random(0.001, 0.002),
+          0,
+          freq
+        )
+      );
+    }
+  }
+  cores.push(new Core(width - 300, height / 2, currentLayer, 0, freq));
 
   playlist[0].play();
 }
@@ -95,8 +121,7 @@ function draw() {
   if (!playlist[0].isPlaying()) {
     playlist[0].loop();
   }
-  console.log(playlist[0].isPlaying());
-  background(5);
+  background(0);
   // if(meteor.x > window.innerWidth + 100 ||
   //   meteor.x < -100 ||
   //   meteor.y > window.innerHeight + 100
@@ -119,10 +144,20 @@ function draw() {
   drawStem(
     map(sin(frameCount * 0.01), -1, 1, -60, 60),
     map(cos(frameCount * 0.01), -1, 1, -10, 0),
-    width / 2 - 100,
+    300,
     height / 2,
     0
   );
+  if (friend) {
+    drawStem(
+      map(sin(frameCount * 0.01 + freq), -1, 1, -60, 60),
+      map(cos(frameCount * 0.01 + freq), -1, 1, -10, 0),
+      width - 300,
+      height / 2,
+      0
+    );
+  }
+
   if (keyIsPressed) {
     if (keyCode == 39 || keyCode == 37) {
       //ArrowRight / ArrowLeft
@@ -133,16 +168,36 @@ function draw() {
         prince.walkCount++;
       }
     }
+    if (friend) {
+      if (key == "a" || key == "d") {
+        //ArrowRight / ArrowLeft
+        prince2.ifIdle = false;
+        prince2.ifWalk = true; // => this.ifWalk
+
+        if (prince2.walkCount <= 60) {
+          prince2.walkCount++;
+        }
+      }
+    }
   } else {
     prince.ifWalk = false;
     prince.ifIdle = true;
     prince.walkCount = 0;
     prince.clothX = 0;
+    if (friend) {
+      prince2.ifWalk = false;
+      prince2.ifIdle = true;
+      prince2.walkCount = 0;
+      prince2.clothX = 0;
+    }
   }
 
   prince.update();
-
   prince.display(cores[0].dataNum);
+  if (friend) {
+    prince2.update();
+    prince2.display(cores[1].dataNum);
+  }
 
   if (seeds.length == 0) {
     currentLayer = 1;
@@ -220,9 +275,18 @@ function draw() {
       seeds.splice(i, 1);
     }
   }
-  for (let i = 0; i < cores.length; i++) {
-    cores[i].update(stopHover, achieveData);
-    cores[i].display();
+  if (friend) {
+    for (let i = 0; i < seeds.length; i++) {
+      seeds2[i].update(stopHover);
+      seeds2[i].display();
+    }
+  }
+
+  cores[0].update(stopHover, achieveData);
+  cores[0].display();
+  if (friend) {
+    cores[1].update(stopHover, achieveData);
+    cores[1].display();
   }
 
   //draw ground
@@ -258,28 +322,33 @@ function keyPressed() {
   }
 
   if (keyCode == 70) {
-    //f
-    for (let i = 0; i < seeds.length; i++) {
-      seeds[i].ifFriend = true;
-    }
-    for (let i = 0; i < cores.length; i++) {
-      cores[i].ifFriend = true;
-    }
+    // //f
+    // for (let i = 0; i < seeds.length; i++) {
+    //   seeds[i].ifFriend = true;
+    // }
+    // for (let i = 0; i < cores.length; i++) {
+    //   cores[i].ifFriend = true;
+    // }
+  }
+  if (keyCode == 220) {
+    // |\、
+    friend = true;
   }
 
-  if (keyCode == 66) {
-    //b
-    for (let i = 0; i < seeds.length; i++) {
-      seeds[i].ifFriend = false;
-      seeds[i].isHovering = false;
-    }
-    for (let i = 0; i < cores.length; i++) {
-      cores[i].ifFriend = false;
-      cores[i].isHovering = false;
-    }
-  }
+  // if (keyCode == 66) {
+  //   //b
+  //   for (let i = 0; i < seeds.length; i++) {
+  //     seeds[i].ifFriend = false;
+  //     seeds[i].isHovering = false;
+  //   }
+  //   for (let i = 0; i < cores.length; i++) {
+  //     cores[i].ifFriend = false;
+  //     cores[i].isHovering = false;
+  //   }
+  // }
 
-  if (keyCode == 68) {
+  if (keyCode == 9) {
+    //tab
     for (let i = 0; i < seeds.length; i++) {
       if (seeds[i].data.length == 0) {
         // console.log("test");

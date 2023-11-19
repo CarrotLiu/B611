@@ -1,10 +1,11 @@
 class Core {
-  constructor(x, y, layerNum, ci) {
+  constructor(x, y, layerNum, ci, freq) {
     this.x = x;
     this.y = y;
     this.layerNum = layerNum;
     this.coreX = 0;
     this.coreY = 0;
+    this.freq = freq;
 
     this.dmouse = dist(
       this.x + this.seedX,
@@ -47,12 +48,12 @@ class Core {
     if (this.ifFriend || this.ifSelf) {
       this.checkHover(stopHover);
     }
-    this.coreX = map(sin(frameCount * 0.01), -1, 1, -60, 60);
-    this.coreY = map(cos(frameCount * 0.01), -1, 1, -10, 0);
+    this.coreX = map(sin(frameCount * 0.01 + this.freq), -1, 1, -60, 60);
+    this.coreY = map(cos(frameCount * 0.01 + this.freq), -1, 1, -10, 0);
     this.checkAchieve(achieveData);
     this.checkClick();
     // console.log(this.ifCheckDataNum);
-    if(this.ifCheckDataNum){
+    if (this.ifCheckDataNum) {
       this.checkDataNum();
       this.ifCheckDataNum = false;
     }
@@ -70,11 +71,14 @@ class Core {
         );
       }
       fill(250, 30, 20);
-      
     } else {
       // let fluct2 = sin(PI / 2 + frameCount * 0.01);
       // this.assignColor(fluct2);
-      for (let i = 0; i < 10 + constrain(map(this.dataNum, 0, this.dataMax, 0, 70), 0, 70); i++) {
+      for (
+        let i = 0;
+        i < 10 + constrain(map(this.dataNum, 0, this.dataMax, 0, 70), 0, 70);
+        i++
+      ) {
         fill(244, 206, 20, floor(map(i, 0, 99, 0, 5)));
         circle(
           this.coreX,
@@ -85,17 +89,15 @@ class Core {
       fill(244, 206, 20);
     }
     circle(this.coreX, this.coreY, map(this.layerNum, 1, 8, 30, 45));
-    
-    
-    
-    if(this.dataNum <= this.dataMax){
+
+    if (this.dataNum <= this.dataMax) {
       let alphaMask = map(this.dataNum, 0, this.dataMax, 255, 0);
-      if(this.isHovering){
+      if (this.isHovering) {
         fill(250, 30, 20);
-      }else{
+      } else {
         fill(255, alphaMask);
       }
-      
+
       circle(this.coreX, this.coreY, map(this.layerNum, 1, 8, 30, 45));
     }
     pop();
@@ -128,7 +130,7 @@ class Core {
       this.ifCheckDataNum = true;
     }
   }
- 
+
   writeText() {
     if (!this.isWriting) {
       let writeAreaContainer = document.createElement("div");
@@ -154,7 +156,7 @@ class Core {
           let userInput = textArea.value;
           this.data[0] = userInput;
           this.ifCheckDataNum = true;
-          
+
           this.isWriting = false;
           this.ifClicked = false;
 
@@ -291,21 +293,18 @@ class Core {
     );
   }
 
-  checkDataNum(){
-
-    if(this.data.length != 0 ){
+  checkDataNum() {
+    if (this.data.length != 0) {
       console.log("runcheckdata");
-      for(let i = 0; i < this.data[0].length; i ++){
+      for (let i = 0; i < this.data[0].length; i++) {
         // console.log(this.data[0][i]);
-        if(this.data[0][i] == "\n"){
-          this.dataNum ++;
+        if (this.data[0][i] == "\n") {
+          this.dataNum++;
         }
       }
-      if(this.dataNum == 0){
+      if (this.dataNum == 0) {
         this.dataNum = 1;
       }
     }
   }
 }
-
-
