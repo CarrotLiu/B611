@@ -18,6 +18,9 @@ let playlist = [];
 let ifPlaying = false;
 let font = "IM Fell DW Pica";
 
+let coverAlpha = 255;
+let delCover = false;
+
 let freq;
 let friend = false;
 
@@ -44,11 +47,15 @@ let texts = ["Who am I? Where am I?",
 "Can you talk to me, just like you did before, to restore our color?"
 ];
 
-let friendReq = "Can I be your friend?";
+let princeTexts = ["Hello!",
+"Hello!",
+"Can I be your friend?"
+];
+let princeTextIndex = 0;
 
 let switchText = false;
 
-let sceneIndex = 0;
+let sceneIndex = -1;
 
 let colorStem = [
   [56, 130, 60], // green
@@ -151,29 +158,11 @@ function draw() {
   }
   background(0);
 
-  
-  // let guideBtn = document.createElement("guide");
-  // guideBtn.id = "button-guide";
   for (let i = 0; i < stars.length; i++) {
     stars[i].update();
     stars[i].display();
   }
-  
-  // push();
-  // translate(prince.x + 130, prince.y - 60);
-  // noStroke();
-  // rectMode(CENTER);
 
-  // fill(255);
-  // rect(0, 0, textWidth("this is test hhhh") + 60, 50, 20);
-  // textAlign(CENTER, CENTER);
-  // textFont(font);
-  // textSize(20);
-  // noStroke();
-  // fill(0);
-  // text("this is test hhhh", 0, 0);
-  // // console.log(textWidth("this is test hhhh"))
-  // pop();
 
   drawStem(
     map(sin(frameCount * 0.01), -1, 1, -60, 60),
@@ -182,7 +171,7 @@ function draw() {
     height / 2,
     0
   );
-  if (friend) {
+  if (sceneIndex == 2) {
     drawStem(
       map(sin(frameCount * 0.01 + freq), -1, 1, -60, 60),
       map(cos(frameCount * 0.01 + freq), -1, 1, -10, 0),
@@ -202,7 +191,7 @@ function draw() {
         prince.walkCount++;
       }
     }
-    if (friend) {
+    if (sceneIndex == 2) {
       if (key == "a" || key == "d") {
         //ArrowRight / ArrowLeft
         prince2.ifIdle = false;
@@ -218,7 +207,7 @@ function draw() {
     prince.ifIdle = true;
     prince.walkCount = 0;
     prince.clothX = 0;
-    if (friend) {
+    if (sceneIndex == 2) {
       prince2.ifWalk = false;
       prince2.ifIdle = true;
       prince2.walkCount = 0;
@@ -228,7 +217,7 @@ function draw() {
   
   prince.update();
   prince.display(cores[0].dataNum);
-  if (friend) {
+  if (sceneIndex == 2) {
     prince2.update();
     prince2.display(cores[1].dataNum);
   }
@@ -312,7 +301,7 @@ function draw() {
       seeds.splice(i, 1);
     }
   }
-  if (friend) {
+  if (sceneIndex == 2) {
     for (let i = 0; i < seeds.length; i++) {
       seeds2[i].update(stopHover);
       seeds2[i].display();
@@ -321,11 +310,32 @@ function draw() {
 
   cores[0].update(stopHover, achieveData);
   cores[0].display();
-  if (friend) {
+  if (sceneIndex == 2) {
     cores[1].update(stopHover, achieveData);
     cores[1].display();
   }
-  if (sceneIndex == 0) {
+  if(sceneIndex == -1){
+    if(delCover){
+      coverAlpha -=2;
+    }
+    if(coverAlpha <= 0){
+      sceneIndex ++;
+    }
+    background(0, coverAlpha);
+    push();
+    fill(255, coverAlpha);
+    textAlign(CENTER, CENTER);
+    textSize(100);
+    textFont(font);
+    text("B611", width / 2, height / 2 - 10);
+    pop();
+    btnx = width / 2;
+    btny = height / 2 + 100;
+    if(!delCover){
+      drawButton(btnx, btny);
+    }
+    
+  } else if (sceneIndex == 0) {
     if(textIndex == 0 || textIndex == 1 || textIndex == 4){
       chatx = prince.x + 135;
       chaty = prince.y - 120;
@@ -337,7 +347,7 @@ function draw() {
       btnx= cores[0].x - 100;
       btny = cores[0].y + 130;
     }
-
+    
     if(textIndex == 0){
       chat.text = texts[textIndex];
       chat.update(chatx, chaty);
@@ -369,6 +379,7 @@ function draw() {
       text("Click the core of Dande to write about your character traits and story", width / 2, 60);
       text("Click the seeds of Dande to write about the character traits you desire", width / 2, 100);
       pop();
+      
     } else if(textIndex == 7){
       push();
       fill(255, 10, 10, map(sin(frameCount * 0.05), -1, 1, 0, 255));
@@ -385,8 +396,29 @@ function draw() {
       }
     }
     
-  } else if (sceneIndex == 1) {
-  
+  } else if (sceneIndex == 2) {
+    if(dist(prince.x, prince.y, prince2.x, prince2.y) <= 150){
+      sceneIndex ++;
+    }
+  } else if(sceneIndex == 3){
+    if(princeTextIndex == 0 || princeTextIndex == 2){
+      chatx = prince.x - 135;
+      chaty = prince.y - 120;
+      btnx= prince.x - 120;
+      btny = prince.y + 130;
+    } else{
+      chatx = prince2.x + 135;
+      chaty = prince2.y - 120;
+      btnx= prince2.x + 120;
+      btny = prince2.y + 130;
+    }
+    
+    if (key == "y") {
+      
+    } else if(key == "n"){
+
+    }
+    
   }
 
   //draw ground
@@ -464,7 +496,7 @@ function keyPressed() {
   }
   if (keyCode == 220) {
     // |\、
-    friend = true;
+    sceneIndex = 2;
   }
 
   // if (keyCode == 66) {
@@ -505,14 +537,22 @@ function mousePressed() {
       cores[i].ifClicked = true;
     }
   }
-  if(dist(mouseX, mouseY, btnx, btny) < 20){
-    switchText = true;
-    if(textIndex < 11){
-      textIndex ++; 
-    } else{
-      textIndex = 0;
+  if(sceneIndex == -1){
+    if(dist(mouseX, mouseY, btnx, btny) < 20){
+      delCover = true;
     }
-    
+  }else{
+    if(dist(mouseX, mouseY, btnx, btny) < 20){
+      switchText = true;
+      if(textIndex < 11){
+        textIndex ++; 
+      } else{
+        sceneIndex = 1;
+        textIndex = 0;
+      }
+      
+    }
   }
+  
 }
 

@@ -43,7 +43,7 @@ class Chat {
       this.h = 50;
     } else {
       this.w = 200;
-      this.h = floor(textWidth(this.text) / 123) * 20 + 50;
+      this.h = floor(textWidth(this.text) / 123) * 18 + 50;
     }
   }
 }
