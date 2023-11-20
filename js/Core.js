@@ -46,7 +46,15 @@ class Core {
       mouseY
     );
     if (this.ifFriend || this.ifSelf) {
-      this.checkHover(stopHover);
+      if(this.ifFriend){
+        if(this.data.length > 0){
+          this.checkHover(stopHover);
+        }else{
+          this.checkHide();
+        }
+      }else{
+        this.checkHover(stopHover);
+      }
     }
     this.coreX = map(sin(frameCount * 0.01 + this.freq), -1, 1, -60, 60);
     this.coreY = map(cos(frameCount * 0.01 + this.freq), -1, 1, -10, 0);

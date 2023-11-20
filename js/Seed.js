@@ -66,7 +66,16 @@ class Seed {
       this.seedY += this.ySpd;
     } else {
       if (this.ifFriend || this.ifSelf) {
-        this.checkHover(stopHover);
+        if(this.ifFriend){
+          if(this.data.length > 0){
+            this.checkHover(stopHover);
+          }else{
+            this.checkHide();
+          }
+        }else{
+          this.checkHover(stopHover);
+        }
+        
       } else {
         this.checkHide();
       }
@@ -368,62 +377,68 @@ class Seed {
           }
         }.bind(this)
       );
-      let reviseButton = document.createElement("button");
-      reviseButton.textContent = "Revise";
-      reviseButton.id = "button-revise";
-      reviseButton.addEventListener(
-        "click",
-        function () {
-          this.isReading = false;
-          this.ifClicked = false;
-          let divToRemove = document.getElementById("readAreaContainer");
-          if (divToRemove) {
-            this.removedReadDiv = divToRemove;
-            divToRemove.parentNode.removeChild(divToRemove);
-          }
-          this.writeText();
-        }.bind(this)
-      );
-      let deleteButton = document.createElement("button");
-      deleteButton.textContent = "Delete";
-      deleteButton.id = "button-delete";
-      deleteButton.addEventListener(
-        "click",
-        function () {
-          this.isReading = false;
-          this.ifClicked = false;
-          this.data.splice(0, 1);
-          let divToRemove = document.getElementById("readAreaContainer");
-          if (divToRemove) {
-            this.removedReadDiv = divToRemove;
-            divToRemove.parentNode.removeChild(divToRemove);
-          }
-        }.bind(this)
-      );
-      let achieveButton = document.createElement("button");
-      achieveButton.textContent = "Achieved";
-      achieveButton.id = "button-achieve";
-      achieveButton.addEventListener(
-        "click",
-        function () {
-          this.isReading = false;
-          this.ifClicked = false;
-          this.achievedData[0] = "\n" + this.data[0];
-          this.data.splice(0, 1);
-          let divToRemove = document.getElementById("readAreaContainer");
-          if (divToRemove) {
-            this.removedReadDiv = divToRemove;
-            divToRemove.parentNode.removeChild(divToRemove);
-          }
-        }.bind(this)
-      );
+
+        let reviseButton = document.createElement("button");
+        reviseButton.textContent = "Revise";
+        reviseButton.id = "button-revise";
+        reviseButton.addEventListener(
+          "click",
+          function () {
+            this.isReading = false;
+            this.ifClicked = false;
+            let divToRemove = document.getElementById("readAreaContainer");
+            if (divToRemove) {
+              this.removedReadDiv = divToRemove;
+              divToRemove.parentNode.removeChild(divToRemove);
+            }
+            this.writeText();
+          }.bind(this)
+        );
+        let deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.id = "button-delete";
+        deleteButton.addEventListener(
+          "click",
+          function () {
+            this.isReading = false;
+            this.ifClicked = false;
+            this.data.splice(0, 1);
+            let divToRemove = document.getElementById("readAreaContainer");
+            if (divToRemove) {
+              this.removedReadDiv = divToRemove;
+              divToRemove.parentNode.removeChild(divToRemove);
+            }
+          }.bind(this)
+        );
+        let achieveButton = document.createElement("button");
+        achieveButton.textContent = "Achieved";
+        achieveButton.id = "button-achieve";
+        achieveButton.addEventListener(
+          "click",
+          function () {
+            this.isReading = false;
+            this.ifClicked = false;
+            this.achievedData[0] = "\n" + this.data[0];
+            this.data.splice(0, 1);
+            let divToRemove = document.getElementById("readAreaContainer");
+            if (divToRemove) {
+              this.removedReadDiv = divToRemove;
+              divToRemove.parentNode.removeChild(divToRemove);
+            }
+          }.bind(this)
+        );
+      
+      
       if (this.removedReadDiv) {
         this.removedReadDiv.innerHTML = "";
         this.removedReadDiv.appendChild(userInputContent);
         buttonContainer.appendChild(backButton);
-        buttonContainer.appendChild(reviseButton);
-        buttonContainer.appendChild(deleteButton);
-        buttonContainer.appendChild(achieveButton);
+        if(this.ifSelf){
+          buttonContainer.appendChild(reviseButton);
+          buttonContainer.appendChild(deleteButton);
+          buttonContainer.appendChild(achieveButton);
+        }
+       
         this.removedReadDiv.appendChild(buttonContainer);
         document.body.appendChild(this.removedReadDiv);
         this.removedReadDiv = null;
@@ -432,9 +447,11 @@ class Seed {
         document.body.appendChild(readAreaContainer);
         readAreaContainer.appendChild(userInputContent);
         buttonContainer.appendChild(backButton);
-        buttonContainer.appendChild(reviseButton);
-        buttonContainer.appendChild(deleteButton);
-        buttonContainer.appendChild(achieveButton);
+        if(this.ifSelf){
+          buttonContainer.appendChild(reviseButton);
+          buttonContainer.appendChild(deleteButton);
+          buttonContainer.appendChild(achieveButton);
+        }
         readAreaContainer.appendChild(buttonContainer);
       }
       this.isReading = true;

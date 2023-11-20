@@ -147,8 +147,15 @@ function setup() {
       );
     }
   }
-  cores.push(new Core(width - 300, height / 2, currentLayer, 0, freq));
+  for(let i = 0; i < seeds2.length; i ++){
+    seeds2[i].ifSelf = false;
 
+  }
+  seeds2[0].data.push("I want to have a lot of money so that I can buy a big house and don't need to wander all over the world with a heavy suitcase.");
+  seeds2[1].data.push("I want to be empathetic so that I can better understand my friends and comfort them when they need.");
+  cores.push(new Core(width - 300, height / 2, currentLayer, 0, freq));
+  cores[1].ifSelf = false;
+  cores[1].data[0] = "I'm confident. I believe that I can achieve whatever I want. I was born in a family with poor economic status, and my parents are not very supportive. They always comment negative about me. But I never believe their words. I believe in myself. And I made it to my dream school with that firm belief in mind. \n I'm full of curiousity and enjoy exploring the unknown. I travel all around the country even though I have little money.";
   playlist[0].play();
 }
 
@@ -171,7 +178,7 @@ function draw() {
     height / 2,
     0
   );
-  if (sceneIndex == 2) {
+  if (sceneIndex == 2 || sceneIndex == 3 || sceneIndex == 4) {
     drawStem(
       map(sin(frameCount * 0.01 + freq), -1, 1, -60, 60),
       map(cos(frameCount * 0.01 + freq), -1, 1, -10, 0),
@@ -191,7 +198,7 @@ function draw() {
         prince.walkCount++;
       }
     }
-    if (sceneIndex == 2) {
+    if (sceneIndex == 2 || sceneIndex == 3 || sceneIndex == 4) {
       if (key == "a" || key == "d") {
         //ArrowRight / ArrowLeft
         prince2.ifIdle = false;
@@ -207,7 +214,7 @@ function draw() {
     prince.ifIdle = true;
     prince.walkCount = 0;
     prince.clothX = 0;
-    if (sceneIndex == 2) {
+    if (sceneIndex == 2 || sceneIndex == 3 || sceneIndex == 4) {
       prince2.ifWalk = false;
       prince2.ifIdle = true;
       prince2.walkCount = 0;
@@ -217,7 +224,7 @@ function draw() {
   
   prince.update();
   prince.display(cores[0].dataNum);
-  if (sceneIndex == 2) {
+  if (sceneIndex == 2 || sceneIndex == 3 || sceneIndex == 4) {
     prince2.update();
     prince2.display(cores[1].dataNum);
   }
@@ -301,8 +308,8 @@ function draw() {
       seeds.splice(i, 1);
     }
   }
-  if (sceneIndex == 2) {
-    for (let i = 0; i < seeds.length; i++) {
+  if (sceneIndex == 2 || sceneIndex == 3 || sceneIndex == 4) {
+    for (let i = 0; i < seeds2.length; i++) {
       seeds2[i].update(stopHover);
       seeds2[i].display();
     }
@@ -310,7 +317,7 @@ function draw() {
 
   cores[0].update(stopHover, achieveData);
   cores[0].display();
-  if (sceneIndex == 2) {
+  if (sceneIndex == 2 || sceneIndex == 3 || sceneIndex == 4) {
     cores[1].update(stopHover, achieveData);
     cores[1].display();
   }
@@ -336,6 +343,17 @@ function draw() {
     }
     
   } else if (sceneIndex == 0) {
+    push();
+    textFont(font);
+    textAlign(CENTER, CENTER);
+    textSize(20);
+    if(dist(80, 50, mouseX, mouseY) <= 30){
+      fill(255, 10, 10);
+    } else{
+      fill(255);
+    }
+    text("Skip Story", 80, 50);
+    pop();
     if(textIndex == 0 || textIndex == 1 || textIndex == 4){
       chatx = prince.x + 135;
       chaty = prince.y - 120;
@@ -397,10 +415,16 @@ function draw() {
     }
     
   } else if (sceneIndex == 2) {
-    if(dist(prince.x, prince.y, prince2.x, prince2.y) <= 150){
-      sceneIndex ++;
+    if(dist(prince.x, height / 2, prince2.x, height / 2) <= 150){
+      // console.log("scene3");
+      if(!seeds2[0].ifFriend){
+        sceneIndex ++;
+      } 
     }
   } else if(sceneIndex == 3){
+    if(dist(prince.x, height / 2, prince2.x, height / 2) > 150){
+      sceneIndex = 2;
+    }
     if(princeTextIndex == 0 || princeTextIndex == 2){
       chatx = prince.x - 135;
       chaty = prince.y - 120;
@@ -412,12 +436,35 @@ function draw() {
       btnx= prince2.x + 120;
       btny = prince2.y + 130;
     }
+    if(princeTextIndex == 2){
+      chat.text = princeTexts[princeTextIndex];
+      if(keyIsPressed){
+        chatx = prince2.x + 135;
+        chaty = prince2.y - 120;
+        btnx= prince2.x + 120;
+        btny = prince2.y + 130;
+        if (key == "y") {
+          chat.text = "Sure!!!";
+          for(let i = 0; i < seeds2.length; i++){
+            seeds2[i].ifFriend = true;
+          }
+          drawButton(btnx, btny);
     
-    if (key == "y") {
+        } else if(key == "n"){
+          chat.text = "Sorry, not now...";
+          drawButton(btnx, btny);
+        }
+      }
       
-    } else if(key == "n"){
-
+    } else if (princeTextIndex == 3){
+      sceneIndex = 2;
+    } else{
+      chat.text = princeTexts[princeTextIndex];
+      drawButton(btnx, btny);
     }
+    
+    chat.update(chatx, chaty);
+    chat.display();
     
   }
 
@@ -442,8 +489,6 @@ function drawButton(x, y){
     stroke(255);
     circle(x, y, 50);
   }else{
-    // stroke(255, map(sin(frameCount * 0.02 / 3), -1, 1, 0, 255));
-    // circle(x, y, 30);
     stroke(255, map(sin(frameCount * 0.02 + PI * 2 / 3), -1, 1, 0, 255));
     circle(x, y, 40);
     stroke(255, map(sin(frameCount * 0.02 + PI), -1, 1, 0, 255));
@@ -485,33 +530,13 @@ function keyPressed() {
     //ArrowDown
   }
 
-  if (keyCode == 70) {
-    // //f
-    // for (let i = 0; i < seeds.length; i++) {
-    //   seeds[i].ifFriend = true;
-    // }
-    // for (let i = 0; i < cores.length; i++) {
-    //   cores[i].ifFriend = true;
-    // }
-  }
   if (keyCode == 220) {
     // |\、
     sceneIndex = 2;
   }
 
-  // if (keyCode == 66) {
-  //   //b
-  //   for (let i = 0; i < seeds.length; i++) {
-  //     seeds[i].ifFriend = false;
-  //     seeds[i].isHovering = false;
-  //   }
-  //   for (let i = 0; i < cores.length; i++) {
-  //     cores[i].ifFriend = false;
-  //     cores[i].isHovering = false;
-  //   }
-  // }
 
-  if (keyCode == 9) {
+  if (keyCode == 192) {
     //tab
     for (let i = 0; i < seeds.length; i++) {
       if (seeds[i].data.length == 0) {
@@ -541,7 +566,10 @@ function mousePressed() {
     if(dist(mouseX, mouseY, btnx, btny) < 20){
       delCover = true;
     }
-  }else{
+  }else if(sceneIndex == 0) {
+    if(dist(80, 50, mouseX, mouseY) <= 30){
+      sceneIndex = 1;
+    }
     if(dist(mouseX, mouseY, btnx, btny) < 20){
       switchText = true;
       if(textIndex < 11){
@@ -549,6 +577,17 @@ function mousePressed() {
       } else{
         sceneIndex = 1;
         textIndex = 0;
+      }
+      
+    }
+  } else if (sceneIndex == 3){
+    if(dist(mouseX, mouseY, btnx, btny) < 20){
+      switchText = true;
+      if(princeTextIndex < 2){
+        princeTextIndex ++; 
+      } else{
+        sceneIndex = 2;
+        princeTextIndex = 0;
       }
       
     }
