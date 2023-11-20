@@ -10,6 +10,7 @@ class Seed {
     this.lastCoreY = 0;
     this.lastSeedX = 0;
     this.lastSeedY = 0;
+    this.size = 0;
 
     this.layerNum = layer;
     this.seedPos = sdPos;
@@ -82,6 +83,11 @@ class Seed {
     }
     //write or read
     this.checkClick();
+    // if(this.layerNum == 1){
+      // console.log(this.coreX, this.coreY);
+      // console.log(this.seedX + this.coreX, this.seedY + this.coreY);
+    // }
+    
   }
 
   display() {
@@ -90,6 +96,7 @@ class Seed {
     this.drawSeedStem();
     this.drawSeed();
     pop();
+    // console.log(this.layerNum);
   }
 
   drawSeed() {
@@ -159,6 +166,13 @@ class Seed {
             6 + this.layerNum * 3.5
           )
         );
+        this.size = map(
+          sin(this.seedPos + frameCount * 0.05),
+          -1,
+          1,
+          3,
+          6 + this.layerNum * 3.5
+        )
         pop();
       }
 

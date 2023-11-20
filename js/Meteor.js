@@ -1,4 +1,5 @@
-// import chroma from "chroma-js"
+import * as chroma from "chroma-js";
+window.chroma = chroma;
 // let chroma = require("chroma-js");
 
 class Meteor{
@@ -60,4 +61,4 @@ class Meteor{
 
 }
 
-export {Meteor};
+// export {Meteor};

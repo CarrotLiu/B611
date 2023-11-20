@@ -24,6 +24,30 @@ let friend = false;
 let meteor;
 let stars = [];
 
+let btnx, btny;
+let chatx, chaty;
+
+let chat;
+
+let textIndex = 0;
+let texts = ["Who am I? Where am I?", 
+"Hello?",
+"Hello, Little Prince, glad you finally notice me again.", 
+"I'm Dande, the inner you.",
+"What do you mean by the 'inner me'?", 
+"I am your real self, the self without any disguise.",
+"You cultivated me, and I grew with you. You were the master of me, and we were both glowing with beautiful colors.",
+"However, it's been a long time since you paid attention to me.",
+"My core used to store all the character traits you possessed, which made you as you.",
+"My seeds composed your ideal self, which stores all the character traits that you desired but did not possess.",
+"Now, all the traits are lost, and the color fades.",
+"Can you talk to me, just like you did before, to restore our color?"
+];
+
+let friendReq = "Can I be your friend?";
+
+let switchText = false;
+
 let sceneIndex = 0;
 
 let colorStem = [
@@ -74,8 +98,11 @@ function setup() {
   canvas.style("z-index", "-1");
   freq = random(PI, 2 * PI);
   // meteor = new Meteor();
-  prince = new Prince(500, height / 2 + 60, 0);
+  prince = new Prince(width / 2 + 100, height / 2 + 60, 0);
   prince2 = new Prince(width - 500, height / 2 + 80, freq);
+  btnx= prince.x - 60;
+  btny = prince.y - 100;
+  chat = new Chat(prince.x + 135, prince.y - 120, "this is test hhhh", font);
   for (let i = 0; i < 150; i++) {
     stars.push(new Star(random(0, width), random(0, height)));
   }
@@ -124,30 +151,29 @@ function draw() {
   }
   background(0);
 
-  if (sceneIndex == 0) {
-  } else if (sceneIndex == 1) {
-  }
+  
   // let guideBtn = document.createElement("guide");
   // guideBtn.id = "button-guide";
   for (let i = 0; i < stars.length; i++) {
     stars[i].update();
     stars[i].display();
   }
+  
+  // push();
+  // translate(prince.x + 130, prince.y - 60);
+  // noStroke();
+  // rectMode(CENTER);
 
-  push();
-  translate(prince.x + 130, prince.y - 60);
-  noStroke();
-  rectMode(CENTER);
-
-  fill(255);
-  rect(0, 0, textWidth("this is test hhhh") + 60, 50, 20);
-  textAlign(CENTER, CENTER);
-  textFont(font);
-  textSize(20);
-  noStroke();
-  fill(0);
-  text("this is test hhhh", 0, 0);
-  pop();
+  // fill(255);
+  // rect(0, 0, textWidth("this is test hhhh") + 60, 50, 20);
+  // textAlign(CENTER, CENTER);
+  // textFont(font);
+  // textSize(20);
+  // noStroke();
+  // fill(0);
+  // text("this is test hhhh", 0, 0);
+  // // console.log(textWidth("this is test hhhh"))
+  // pop();
 
   drawStem(
     map(sin(frameCount * 0.01), -1, 1, -60, 60),
@@ -199,7 +225,7 @@ function draw() {
       prince2.clothX = 0;
     }
   }
-
+  
   prince.update();
   prince.display(cores[0].dataNum);
   if (friend) {
@@ -213,12 +239,13 @@ function draw() {
     for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + currentLayer * 3)) {
       seeds.push(
         new Seed(
-          width / 2 - 100,
+          300,
           height / 2,
           currentLayer,
           i,
           random(0, 0.003),
           random(0.001, 0.002),
+          0,
           0
         )
       );
@@ -256,16 +283,18 @@ function draw() {
         for (let i = 0; i < 2 * PI; i += (2 * PI) / (11 + currentLayer * 3)) {
           seeds.push(
             new Seed(
-              width / 2 - 100,
+              300,
               height / 2,
               currentLayer,
               i,
               random(0, 0.003),
               random(0.001, 0.002),
+              0,
               0
             )
           );
         }
+        // console.log(currentLayer, seeds);
       }
     }
     dataNum = 0;
@@ -296,6 +325,69 @@ function draw() {
     cores[1].update(stopHover, achieveData);
     cores[1].display();
   }
+  if (sceneIndex == 0) {
+    if(textIndex == 0 || textIndex == 1 || textIndex == 4){
+      chatx = prince.x + 135;
+      chaty = prince.y - 120;
+      btnx= prince.x + 120;
+      btny = prince.y + 130;
+    } else{
+      chatx = cores[0].x - 130;
+      chaty = cores[0].y - 135;
+      btnx= cores[0].x - 100;
+      btny = cores[0].y + 130;
+    }
+
+    if(textIndex == 0){
+      chat.text = texts[textIndex];
+      chat.update(chatx, chaty);
+      chat.display();
+      drawButton(btnx, btny);
+      push();
+      fill(255);
+      textAlign(CENTER, CENTER);
+      textSize(20);
+      textFont(font);
+    } else{
+      if(dist(prince.x, height / 2, 0, height / 2) <= 500){
+        chat.text = texts[textIndex];
+        chat.update(chatx, chaty);
+        chat.display();
+        drawButton(btnx, btny);
+        push();
+        fill(255);
+        textAlign(CENTER, CENTER);
+        textSize(20);
+        textFont(font);
+
+      }else{
+        text("Press Left / Right Arrow Button to move the prince", width / 2, 60);
+      }
+    }
+    
+    if(textIndex == 11){   
+      text("Click the core of Dande to write about your character traits and story", width / 2, 60);
+      text("Click the seeds of Dande to write about the character traits you desire", width / 2, 100);
+      pop();
+    } else if(textIndex == 7){
+      push();
+      fill(255, 10, 10, map(sin(frameCount * 0.05), -1, 1, 0, 255));
+      translate(cores[0].x, cores[0].y);
+      circle(cores[0].coreX, cores[0].coreY, floor(map(cores[0].layerNum, 1, 8, 30, 45)));
+      pop();
+    } else if(textIndex == 8){
+      for(let i = 0; i < seeds.length; i ++){
+        push();
+        translate(seeds[i].x + seeds[i].coreX + seeds[i].seedX, seeds[i].y + seeds[i].coreY + seeds[i].seedY);
+        fill(255, 10, 10, map(sin(frameCount * 0.05), -1, 1, 0, 255));
+        circle(0, 0, seeds[i].size);
+        pop();
+      }
+    }
+    
+  } else if (sceneIndex == 1) {
+  
+  }
 
   //draw ground
   // push();
@@ -304,6 +396,38 @@ function draw() {
   // rect(0, height - 30, width, 30);
   // pop();
   achieveData = [];
+}
+
+function drawButton(x, y){
+  push();
+  noStroke();
+  fill(255);
+  circle(x, y, 10);
+  strokeWeight(1);
+  noFill();
+  circle(x, y, 50);
+  if(dist(mouseX, mouseY, btnx, btny) < 20){
+    stroke(255);
+    circle(x, y, 50);
+  }else{
+    // stroke(255, map(sin(frameCount * 0.02 / 3), -1, 1, 0, 255));
+    // circle(x, y, 30);
+    stroke(255, map(sin(frameCount * 0.02 + PI * 2 / 3), -1, 1, 0, 255));
+    circle(x, y, 40);
+    stroke(255, map(sin(frameCount * 0.02 + PI), -1, 1, 0, 255));
+    circle(x, y, 50);
+  }
+  strokeWeight(1);
+  noFill();
+  circle(x, y, 50);
+  pop();
+  if(dist(mouseX, mouseY, x, y) < 20){
+    for (let i = 0; i < 80; i++) {
+      noStroke();
+      fill(255, 10 - floor(map(i, 0, 99, 5, 0)));
+      circle(x, y, i * 0.35);
+    }
+  }
 }
 
 function drawStem(x, y, transX, transY, colorIndex) {
@@ -381,4 +505,14 @@ function mousePressed() {
       cores[i].ifClicked = true;
     }
   }
+  if(dist(mouseX, mouseY, btnx, btny) < 20){
+    switchText = true;
+    if(textIndex < 11){
+      textIndex ++; 
+    } else{
+      textIndex = 0;
+    }
+    
+  }
 }
+
