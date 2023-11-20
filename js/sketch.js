@@ -16,6 +16,7 @@
 
 let playlist = [];
 let ifPlaying = false;
+let font = "IM Fell DW Pica";
 
 let freq;
 let friend = false;
@@ -73,8 +74,8 @@ function setup() {
   canvas.style("z-index", "-1");
   freq = random(PI, 2 * PI);
   // meteor = new Meteor();
-  prince = new Prince(width / 2 - 200, height / 2 + 60, 0);
-  prince2 = new Prince(width / 2 + 200, height / 2 + 80, freq);
+  prince = new Prince(500, height / 2 + 60, 0);
+  prince2 = new Prince(width - 500, height / 2 + 80, freq);
   for (let i = 0; i < 150; i++) {
     stars.push(new Star(random(0, width), random(0, height)));
   }
@@ -122,17 +123,8 @@ function draw() {
     playlist[0].loop();
   }
   background(0);
-  // if(meteor.x > window.innerWidth + 100 ||
-  //   meteor.x < -100 ||
-  //   meteor.y > window.innerHeight + 100
-  // ){
-  //   meteor = new Star(100, 100);
-  // } else {
-  //     meteor.display();
-  // }
+
   if (sceneIndex == 0) {
-    // let startBtn = document.createElement("start");
-    // startBtn.id = "button-start";
   } else if (sceneIndex == 1) {
   }
   // let guideBtn = document.createElement("guide");
@@ -141,6 +133,22 @@ function draw() {
     stars[i].update();
     stars[i].display();
   }
+
+  push();
+  translate(prince.x + 130, prince.y - 60);
+  noStroke();
+  rectMode(CENTER);
+
+  fill(255);
+  rect(0, 0, textWidth("this is test hhhh") + 60, 50, 20);
+  textAlign(CENTER, CENTER);
+  textFont(font);
+  textSize(20);
+  noStroke();
+  fill(0);
+  text("this is test hhhh", 0, 0);
+  pop();
+
   drawStem(
     map(sin(frameCount * 0.01), -1, 1, -60, 60),
     map(cos(frameCount * 0.01), -1, 1, -10, 0),
