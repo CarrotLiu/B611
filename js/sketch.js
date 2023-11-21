@@ -165,10 +165,10 @@ function draw() {
   }
   background(0);
 
-  for (let i = 0; i < stars.length; i++) {
-    stars[i].update();
-    stars[i].display();
-  }
+  // for (let i = 0; i < stars.length; i++) {
+  //   stars[i].update();
+  //   stars[i].display();
+  // }
 
 
   drawStem(
@@ -398,13 +398,13 @@ function draw() {
       text("Click the seeds of Dande to write about the character traits you desire", width / 2, 100);
       pop();
       
-    } else if(textIndex == 7){
+    } else if(textIndex == 8){
       push();
       fill(255, 10, 10, map(sin(frameCount * 0.05), -1, 1, 0, 255));
       translate(cores[0].x, cores[0].y);
       circle(cores[0].coreX, cores[0].coreY, floor(map(cores[0].layerNum, 1, 8, 30, 45)));
       pop();
-    } else if(textIndex == 8){
+    } else if(textIndex == 9){
       for(let i = 0; i < seeds.length; i ++){
         push();
         translate(seeds[i].x + seeds[i].coreX + seeds[i].seedX, seeds[i].y + seeds[i].coreY + seeds[i].seedY);
@@ -538,7 +538,7 @@ function keyPressed() {
 
   if (keyCode == 192) {
     //tab
-    for (let i = 0; i < seeds.length; i++) {
+    for (let i = 0 ; i < seeds.length; i++) {
       if (seeds[i].data.length == 0) {
         // console.log("test");
         seeds[i].data[0] = "this is a test";
