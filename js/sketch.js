@@ -165,10 +165,10 @@ function draw() {
   }
   background(0);
 
-  // for (let i = 0; i < stars.length; i++) {
-  //   stars[i].update();
-  //   stars[i].display();
-  // }
+  for (let i = 0; i < stars.length; i++) {
+    stars[i].update();
+    stars[i].display();
+  }
 
 
   drawStem(
