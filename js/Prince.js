@@ -111,14 +111,14 @@ class Prince {
       circle(this.hairX, this.hairY, 15);
     }
     pop();
-    stroke(0);
+    stroke("#001C30");
     strokeWeight(5);
     pop();
   }
 
   drawEye() {
     push();
-    stroke(0);
+    stroke("#001C30");
     strokeWeight(5);
     translate(this.eyeX, this.eyeY);
     ///open eye

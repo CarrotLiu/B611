@@ -103,6 +103,7 @@ function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   canvas.position(0, 0);
   canvas.style("z-index", "-1");
+  noCursor();
   freq = random(PI, 2 * PI);
   // meteor = new Meteor();
   prince = new Prince(width / 2 + 100, height / 2 + 60, 0);
@@ -163,7 +164,7 @@ function draw() {
   if (!playlist[0].isPlaying()) {
     playlist[0].loop();
   }
-  background(0);
+  background("#001C30");
 
   for (let i = 0; i < stars.length; i++) {
     stars[i].update();
@@ -328,7 +329,7 @@ function draw() {
     if(coverAlpha <= 0){
       sceneIndex ++;
     }
-    background(0, coverAlpha);
+    background(0, 28, 48, coverAlpha);
     push();
     fill(255, coverAlpha);
     textAlign(CENTER, CENTER);
@@ -467,13 +468,16 @@ function draw() {
     chat.display();
     
   }
-
-  //draw ground
-  // push();
-  // noStroke();
-  // fill("#B0926A");
-  // rect(0, height - 30, width, 30);
-  // pop();
+  //draw cursor
+  push();
+  for (let i = 0; i < 60; i+=2) {
+    noStroke();
+    fill(244, 206, 20, 10 - floor(map(i, 0, 99, 5, 0)));
+    circle(mouseX, mouseY, i * 0.6);
+  }
+  fill(244, 206, 20);
+  circle(mouseX, mouseY, 15);
+  pop();
   achieveData = [];
 }
 
